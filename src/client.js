@@ -1,4 +1,4 @@
-/* tg-widget-ui runtime: QuickJS-safe, zero-dependency, event-delegated */
+/* tg-widget-ui client: QuickJS-safe, zero-dependency, event-delegated */
 (function (root) {
   var tg = root.TelegramWidget || null;
   var listeners = {};

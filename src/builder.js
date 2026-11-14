@@ -125,12 +125,14 @@ export function buildWidget({
   body = "",
   customCss = "",
   customJs = "",
-  includeRuntime = true,
+  includeClient = true,
+  includeRuntime,
   treeShake = true
 } = {}) {
+  const useClient = includeRuntime !== undefined ? includeRuntime : includeClient;
   const rawCss = fs.readFileSync(path.join(__dirname, "styles.css"), "utf8");
   const baseCss = treeShake ? pruneCss(rawCss, body) : rawCss;
-  const rawJs = includeRuntime ? fs.readFileSync(path.join(__dirname, "runtime.js"), "utf8") : "";
+  const rawJs = useClient ? fs.readFileSync(path.join(__dirname, "client.js"), "utf8") : "";
   const baseJs = treeShake && rawJs ? pruneJs(rawJs, body) : rawJs;
 
   const css = minifyCss(`${baseCss}\n${customCss}`);

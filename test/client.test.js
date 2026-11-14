@@ -6,7 +6,7 @@ import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const runtimeCode = fs.readFileSync(path.join(__dirname, "..", "src", "runtime.js"), "utf8");
+const clientCode = fs.readFileSync(path.join(__dirname, "..", "src", "client.js"), "utf8");
 
 function createMockEnv(requestImpl) {
   const listeners = {};
@@ -49,7 +49,7 @@ function createMockEnv(requestImpl) {
     }
   };
   sandbox.globalThis = sandbox;
-  vm.runInNewContext(runtimeCode, sandbox);
+  vm.runInNewContext(clientCode, sandbox);
   return { TwUI: sandbox.TwUI, listeners, saveBtn, saveBtnClasses };
 }
 

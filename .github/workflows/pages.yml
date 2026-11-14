@@ -6,7 +6,7 @@ on:
     paths:
       - "playground/**"
       - "src/styles.css"
-      - "src/runtime.js"
+      - "src/client.js"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -36,7 +36,7 @@ jobs:
               .replaceAll("../src/", "src/");
             fs.writeFileSync("_site/index.html", html);
             fs.copyFileSync("src/styles.css", "_site/src/styles.css");
-            fs.copyFileSync("src/runtime.js", "_site/src/runtime.js");
+            fs.copyFileSync("src/client.js", "_site/src/client.js");
             fs.writeFileSync("_site/.nojekyll", "");
           '
       - uses: actions/configure-pages@v5
