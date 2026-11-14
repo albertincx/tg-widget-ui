@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>tg-widget-ui — Interactive Playground</title>
+  <link rel="stylesheet" href="../src/styles.css">
+  <style>
+    .pg-shell {
+      max-width: 780px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 720px) {
+      .pg-shell { grid-template-columns: 380px 1fr; align-items: start; }
+    }
+    .pg-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--tw-sec-bg);
+    }
+    .pg-bubble {
+      border: 1px solid var(--tw-sep);
+      border-radius: 16px;
+      padding: 12px;
+      background: var(--tw-bg);
+      max-width: 400px;
+    }
+    .pg-log {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      background: var(--tw-sec-bg);
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 220px;
+      max-height: 460px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg-shell">
+    <div>
+      <div class="pg-bar" style="margin-bottom:12px">
+        <strong>Telegram Widget Preview</strong>
+        <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" id="pg-theme-btn">Toggle Dark/Light</button>
+      </div>
+      <div class="pg-bubble">
+        <main class="tw-root">
+          <div>
+            <h2 class="tw-title">Release Checklist</h2>
+            <p class="tw-sub">Interactive Telegram HTML Widget (Bot API 10.4)</p>
+          </div>
+          <div class="tw-prog" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="2">
+            <div class="tw-prog-fill" style="width:66.7%"></div>
+          </div>
+          <div class="tw-sec-label">Tasks</div>
+          <div class="tw-list" role="list">
+            <button type="button" class="tw-item" role="checkbox" aria-checked="true" data-tw-name="tests">
+              <span class="tw-cb-box" aria-hidden="true">
+                <svg class="tw-ico-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg class="tw-ico-dash" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </span>
+              <span class="tw-item-body">
+                <span class="tw-item-title">Run unit tests</span>
+                <span class="tw-item-desc">Zero-dependency node:test</span>
+              </span>
+            </button>
+            <button type="button" class="tw-item" role="checkbox" aria-checked="false" data-tw-name="deploy">
+              <span class="tw-cb-box" aria-hidden="true">
+                <svg class="tw-ico-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg class="tw-ico-dash" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </span>
+              <span class="tw-item-body">
+                <span class="tw-item-title">Publish widget</span>
+                <span class="tw-item-desc">Verify 4 KB zlib-9 budget</span>
+              </span>
+            </button>
+            <button type="button" class="tw-item" role="switch" aria-checked="true" data-tw-name="notify">
+              <span class="tw-item-body">
+                <span class="tw-item-title">Notify chat on save</span>
+              </span>
+              <span class="tw-sw-track" aria-hidden="true"><span class="tw-sw-thumb"></span></span>
+            </button>
+            <button type="button" class="tw-item" data-tw-req='{"action":"open_ton"}'>
+              <span class="tw-item-body">
+                <span class="tw-item-title">TON Wallet</span>
+                <span class="tw-item-desc">Bot API 10.4 query</span>
+              </span>
+              <span class="tw-item-trail"><span class="tw-badge tw-badge-ok">Ready</span></span>
+            </button>
+          </div>
+          <div class="tw-save-bar">
+            <span class="tw-save-status">Syncs via TelegramWidget.request()</span>
+            <button type="button" class="tw-btn" data-tw-save="save_checklist" data-tw-label="Save" data-tw-saving="Saving..." data-tw-saved="Saved">Save</button>
+          </div>
+        </main>
+      </div>
+    </div>
+    <div>
+      <div class="tw-sec-label" style="margin-bottom:8px">TelegramWidget Mock Log</div>
+      <div class="pg-log" id="pg-log">Interact with the widget on the left...</div>
+    </div>
+  </div>
+
+  <script>
+    window.TelegramWidget = {
+      colorScheme: "light",
+      themeParams: {},
+      request: function (payload) {
+        logEvent("TelegramWidget.request()", payload);
+        return new Promise(function (resolve) {
+          setTimeout(function () { resolve({ ok: true }); }, 250);
+        });
+      },
+      openLink: function (url) { logEvent("TelegramWidget.openLink()", url); },
+      openTelegramLink: function (url) { logEvent("TelegramWidget.openTelegramLink()", url); },
+      onEvent: function () {}
+    };
+
+    function logEvent(type, data) {
+      var el = document.getElementById("pg-log");
+      var line = "[" + new Date().toLocaleTimeString() + "] " + type + ": " +
+        (typeof data === "string" ? data : JSON.stringify(data));
+      el.textContent = line + "\n" + el.textContent;
+    }
+  </script>
+  <script src="../src/runtime.js"></script>
+  <script>
+    TwUI.on("change", function (d) { logEvent("TwUI change", d); });
+    var dark = false;
+    document.getElementById("pg-theme-btn").addEventListener("click", function () {
+      dark = !dark;
+      TwUI.applyTheme(dark ? {
+        bg_color: "#1c1c1e",
+        secondary_bg_color: "#2c2c2e",
+        text_color: "#f5f5f7",
+        hint_color: "#98989f",
+        button_color: "#3b9eff",
+        button_text_color: "#ffffff"
+      } : {
+        bg_color: "#ffffff",
+        secondary_bg_color: "#f2f2f7",
+        text_color: "#111111",
+        hint_color: "#6e6e73",
+        button_color: "#2481cc",
+        button_text_color: "#ffffff"
+      });
+    });
+  </script>
+</body>
+</html>

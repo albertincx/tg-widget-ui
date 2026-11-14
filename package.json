@@ -1,0 +1,40 @@
+{
+  "name": "tg-widget-ui",
+  "version": "0.1.0",
+  "description": "Ultra-lightweight, zero-dependency UI component library and compiler for Telegram HTML Widgets (Bot API 10.4).",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./components": "./src/components.js",
+    "./builder": "./src/builder.js",
+    "./runtime": "./src/runtime.js",
+    "./styles.css": "./src/styles.css"
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "README.ru.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check:examples": "node examples/checklist-widget.js && node examples/settings-widget.js"
+  },
+  "keywords": [
+    "telegram",
+    "telegram-bot-api",
+    "telegram-widgets",
+    "html-widgets",
+    "bot-api-10-4",
+    "ui-library",
+    "components",
+    "zero-dependency",
+    "quickjs",
+    "ton"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
