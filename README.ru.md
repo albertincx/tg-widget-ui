@@ -109,6 +109,7 @@ npm run check:examples
 
 ## Ссылки
 
+- [Скилл для ИИ-агентов (`SKILL.md`)](skills/tg-widget-ui/SKILL.md)
 - [Официальная спецификация Telegram Bot API — 9 ноября 2026 (Bot API 10.4)](https://core.telegram.org/bots/api-changelog#november-9-2026)
 - [Руководство для контрибьюторов (EN)](CONTRIBUTING.md)
 - [Лицензия MIT](LICENSE)

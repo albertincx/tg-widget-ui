@@ -109,6 +109,7 @@ npm run check:examples
 
 ## Links
 
+- [AI Agent Skill (`SKILL.md`)](skills/tg-widget-ui/SKILL.md)
 - [Telegram Bot API Changelog — November 9, 2026 (Bot API 10.4)](https://core.telegram.org/bots/api-changelog#november-9-2026)
 - [Contributing Guide](CONTRIBUTING.md)
 - [MIT License](LICENSE)
