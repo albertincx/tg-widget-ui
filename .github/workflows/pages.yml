@@ -1,0 +1,56 @@
+name: Deploy Playground to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "playground/**"
+      - "src/styles.css"
+      - "src/runtime.js"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Build playground-only site
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            fs.mkdirSync("_site/src", { recursive: true });
+            const html = fs.readFileSync("playground/index.html", "utf8")
+              .replaceAll("../src/", "src/");
+            fs.writeFileSync("_site/index.html", html);
+            fs.copyFileSync("src/styles.css", "_site/src/styles.css");
+            fs.copyFileSync("src/runtime.js", "_site/src/runtime.js");
+            fs.writeFileSync("_site/.nojekyll", "");
+          '
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
