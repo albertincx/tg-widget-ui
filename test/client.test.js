@@ -92,3 +92,21 @@ test("runtime catches synchronous throws and async rejections from TelegramWidge
   const asyncEnv = createMockEnv(() => Promise.reject(new Error("async boom")));
   await assert.rejects(() => asyncEnv.TwUI.request("x"), /async boom/);
 });
+
+test("clicking pagination ellipsis (...) inside data-tw-paged[data-tw-lock] does not trigger loading", () => {
+  let loadingCount = 0;
+  const pagedWrap = {
+    parentElement: null,
+    hasAttribute: (name) => name === "data-tw-paged" || name === "data-tw-lock",
+    getAttribute: () => null
+  };
+  const dots = {
+    parentElement: pagedWrap,
+    hasAttribute: () => false,
+    getAttribute: () => null
+  };
+  const env = createMockEnv(() => ({ ok: true }));
+  env.TwUI.on("loading", (v) => { if (v) loadingCount++; });
+  env.listeners.click({ target: dots });
+  assert.equal(loadingCount, 0);
+});

@@ -326,7 +326,7 @@
         /* @section overlay */if (lockReq && pReq && pReq.then) pReq.then(function () { setLoading(false); }, function () { setLoading(false); });/* @section end */
         return;
       }
-      /* @section overlay */if (t.hasAttribute("data-tw-lock")) {
+      /* @section overlay */if (t.hasAttribute("data-tw-lock") && !t.hasAttribute("data-tw-paged")) {
         setLoading(true, t.getAttribute("data-tw-loading") || "Loading...");
         emit("lock", { el: t });
         return;
