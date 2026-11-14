@@ -54,7 +54,7 @@
     var btns = doc.querySelectorAll("[data-tw-save]");
     for (var i = 0; i < btns.length; i++) {
       var btn = btns[i];
-      btn.classList.remove("tw-btn-saved");
+      btn.classList.remove("tw-btn-saved", "tw-btn-danger");
       var idleLabel = btn.getAttribute("data-tw-label") || "Save";
       btn.textContent = idleLabel;
       if (btn.hasAttribute("data-tw-auto-disable")) {
@@ -67,7 +67,14 @@
   function sendRequest(payload) {
     var data = typeof payload === "string" ? payload : JSON.stringify(payload);
     if (tg && typeof tg.request === "function") {
-      return Promise.resolve(tg.request(data));
+      try {
+        return Promise.resolve(tg.request(data)).then(function (res) {
+          if (res && res.ok === false) return Promise.reject(res);
+          return res;
+        });
+      } catch (err) {
+        return Promise.reject(err);
+      }
     }
     emit("request", payload);
     return Promise.resolve({ ok: true, local: true, payload: payload });
@@ -77,8 +84,10 @@
     var action = btn.getAttribute("data-tw-save") || "save";
     var savingLabel = btn.getAttribute("data-tw-saving") || "Saving...";
     var savedLabel = btn.getAttribute("data-tw-saved") || "Saved";
+    var errLabel = btn.getAttribute("data-tw-error") || "Error";
     var state = getState();
     btn.disabled = true;
+    btn.classList.remove("tw-btn-saved", "tw-btn-danger");
     btn.textContent = savingLabel;
     return sendRequest({ action: action, state: state }).then(
       function (res) {
@@ -90,7 +99,8 @@
       },
       function (err) {
         btn.disabled = false;
-        btn.textContent = btn.getAttribute("data-tw-label") || "Save";
+        btn.classList.add("tw-btn-danger");
+        btn.textContent = errLabel;
         emit("error", err);
       }
     );
@@ -132,7 +142,9 @@
         return;
       }
       if (t.hasAttribute && t.hasAttribute("data-tw-req")) {
-        sendRequest(t.getAttribute("data-tw-req"));
+        sendRequest(t.getAttribute("data-tw-req")).catch(function (err) {
+          emit("error", err);
+        });
         return;
       }
       if (t.hasAttribute && t.hasAttribute("data-tw-link")) {

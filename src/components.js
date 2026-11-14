@@ -147,13 +147,14 @@ export function twSaveButton({
   label = "Save",
   savingLabel = "Saving...",
   savedLabel = "Saved",
+  errorLabel = "Error",
   statusText = "",
   autoDisable = false,
   block = false
 } = {}) {
   const cls = ["tw-btn", block ? "tw-btn-block" : ""].filter(Boolean).join(" ");
   const dis = autoDisable ? " data-tw-auto-disable disabled" : "";
-  const btn = `<button type="button" class="${cls}" data-tw-save="${esc(action)}" data-tw-label="${esc(label)}" data-tw-saving="${esc(savingLabel)}" data-tw-saved="${esc(savedLabel)}"${dis}>${esc(label)}</button>`;
+  const btn = `<button type="button" class="${cls}" data-tw-save="${esc(action)}" data-tw-label="${esc(label)}" data-tw-saving="${esc(savingLabel)}" data-tw-saved="${esc(savedLabel)}" data-tw-error="${esc(errorLabel)}"${dis}>${esc(label)}</button>`;
 
   if (!statusText) return btn;
   return `<div class="tw-save-bar"><span class="tw-save-status">${esc(statusText)}</span>${btn}</div>`;
