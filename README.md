@@ -86,7 +86,15 @@ console.log({ rawBytes, compressedBytes, withinLimits });
 
 ## Playground & Tests
 
-Open [playground/index.html](playground/index.html) in any browser to preview components with a mocked `TelegramWidget` runtime and light/dark theme toggle.
+Start the local interactive playground (with a mocked `TelegramWidget` runtime and light/dark theme toggle):
+
+```bash
+npm start
+# or
+npm run playground
+```
+
+Then open `http://127.0.0.1:4173/playground/index.html` (or open [playground/index.html](playground/index.html) directly).
 
 ```bash
 # Run unit tests

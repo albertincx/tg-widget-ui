@@ -18,6 +18,8 @@
     "LICENSE"
   ],
   "scripts": {
+    "start": "node playground/server.js",
+    "playground": "node playground/server.js",
     "test": "node --test test/*.test.js",
     "check:examples": "node examples/checklist-widget.js && node examples/settings-widget.js"
   },

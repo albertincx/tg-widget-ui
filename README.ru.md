@@ -86,7 +86,15 @@ console.log({ rawBytes, compressedBytes, withinLimits });
 
 ## Песочница и тесты
 
-Откройте [playground/index.html](playground/index.html) в браузере для интерактивного предпросмотра компонентов с моком `TelegramWidget` и переключателем светлой/тёмной темы.
+Запустите локальную интерактивную песочницу (с моком `TelegramWidget` и переключением светлой/тёмной темы):
+
+```bash
+npm start
+# или
+npm run playground
+```
+
+Затем откройте `http://127.0.0.1:4173/playground/index.html` (или откройте [playground/index.html](playground/index.html) напрямую).
 
 ```bash
 # Запуск модульных тестов
