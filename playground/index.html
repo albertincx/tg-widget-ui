@@ -166,7 +166,7 @@
             <div class="tw-tab-panel" role="tabpanel" data-tw-panel="orders" hidden>
               <div class="tw-root" data-tw-md>
                 <div class="tw-root" data-tw-master>
-                  <div class="tw-root" data-tw-paged data-tw-size="2" data-tw-page="1">
+                  <div class="tw-root" data-tw-paged data-tw-size="2" data-tw-page="1" data-tw-lock="350">
                     <div class="tw-sec-label">Paged List (tap item for details)</div>
                     <div class="tw-list" role="list">
                       <button type="button" class="tw-item" data-tw-open="item-1"><span class="tw-item-body"><span class="tw-item-title">Order #101 — TON Transfer</span><span class="tw-item-desc">Tap to view details</span></span><span class="tw-item-trail">&rsaquo;</span></button>
@@ -220,7 +220,16 @@
           </div>
           <div class="tw-save-bar">
             <span class="tw-save-status">Syncs via TelegramWidget.request()</span>
-            <button type="button" class="tw-btn" data-tw-save="save_checklist" data-tw-label="Save" data-tw-saving="Saving..." data-tw-saved="Saved">Save</button>
+            <div class="tw-btn-row" style="flex:0 0 auto">
+              <button type="button" class="tw-btn tw-btn-sec" data-tw-req='{"action":"sync_data"}' data-tw-lock data-tw-loading="Loading...">Loading</button>
+              <button type="button" class="tw-btn" data-tw-save="save_checklist" data-tw-label="Save" data-tw-saving="Saving..." data-tw-saved="Saved">Save</button>
+            </div>
+          </div>
+          <div class="tw-overlay" data-tw-overlay hidden role="status" aria-live="polite" aria-busy="true">
+            <div class="tw-overlay-box">
+              <span class="tw-spinner" aria-hidden="true"></span>
+              <span class="tw-overlay-text">Loading...</span>
+            </div>
           </div>
         </main>
       </div>
@@ -237,8 +246,9 @@
       themeParams: {},
       request: function (payload) {
         logEvent("TelegramWidget.request()", payload);
+        var delay = typeof payload === "string" && payload.indexOf("sync_data") !== -1 ? 1500 : 250;
         return new Promise(function (resolve) {
-          setTimeout(function () { resolve({ ok: true }); }, 250);
+          setTimeout(function () { resolve({ ok: true }); }, delay);
         });
       },
       openLink: function (url) { logEvent("TelegramWidget.openLink()", url); },

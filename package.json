@@ -1,6 +1,6 @@
 {
   "name": "tg-widget-ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Ultra-lightweight, zero-dependency UI component library and compiler for Telegram HTML Widgets (Bot API 10.4).",
   "type": "module",
   "main": "./src/index.js",

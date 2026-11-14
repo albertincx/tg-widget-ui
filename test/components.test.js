@@ -27,6 +27,7 @@ import {
   twChipGroup,
   twStatGrid,
   twAvatar,
+  twLoadingOverlay,
   pageRange
 } from "../src/index.js";
 
@@ -241,4 +242,18 @@ test("twStatGrid and twAvatar render stats and initials/images", () => {
   const avText = twAvatar({ name: "Albert Nuriev", size: "lg" });
   assert.match(avText, /tw-avatar tw-av-lg/);
   assert.match(avText, />AN</);
+});
+
+test("twLoadingOverlay and lock buttons render blocking overlay attributes", () => {
+  const ov = twLoadingOverlay({ text: "Please wait..." });
+  assert.match(ov, /data-tw-overlay hidden/);
+  assert.match(ov, /aria-busy="true"/);
+  assert.match(ov, /Please wait\.\.\./);
+
+  const btn = twButton({ label: "Sync", request: '{"action":"sync"}', lock: true, loadingLabel: "Syncing..." });
+  assert.match(btn, /data-tw-lock/);
+  assert.match(btn, /data-tw-loading="Syncing\.\.\."/);
+
+  const save = twSaveButton({ action: "save", lock: true });
+  assert.match(save, /data-tw-lock/);
 });

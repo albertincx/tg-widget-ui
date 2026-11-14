@@ -75,6 +75,28 @@
     emit("dirty", dirty);
   }
 
+  /* @section overlay */function setLoading(flag, text) {
+    var doc = root.document;
+    if (!doc) return;
+    var ov = doc.querySelector("[data-tw-overlay]");
+    if (!ov && flag && doc.body && doc.createElement) {
+      ov = doc.createElement("div");
+      ov.className = "tw-overlay";
+      ov.setAttribute("data-tw-overlay", "");
+      ov.setAttribute("role", "status");
+      ov.setAttribute("aria-live", "polite");
+      ov.setAttribute("aria-busy", "true");
+      ov.innerHTML = '<div class="tw-overlay-box"><span class="tw-spinner" aria-hidden="true"></span><span class="tw-overlay-text"></span></div>';
+      doc.body.appendChild(ov);
+    }
+    if (ov) {
+      var tx = ov.querySelector(".tw-overlay-text");
+      if (tx && text) tx.textContent = text;
+      ov.hidden = !flag;
+    }
+    emit("loading", !!flag);
+  }/* @section end */
+
   function sendRequest(payload) {
     var data = typeof payload === "string" ? payload : JSON.stringify(payload);
     if (tg && typeof tg.request === "function") {
@@ -176,7 +198,16 @@
           var targetPage = t.hasAttribute("data-tw-page-btn")
             ? parseInt(t.getAttribute("data-tw-page-btn"), 10)
             : parseInt(wrap.getAttribute("data-tw-page") || "1", 10) + (t.hasAttribute("data-tw-next") ? 1 : -1);
-          updatePaged(wrap, targetPage);
+          if (wrap.hasAttribute("data-tw-lock") && typeof setLoading === "function") {
+            var ms = parseInt(wrap.getAttribute("data-tw-lock") || "300", 10) || 300;
+            setLoading(true, wrap.getAttribute("data-tw-loading") || "Loading...");
+            setTimeout(function () {
+              updatePaged(wrap, targetPage);
+              setLoading(false);
+            }, ms);
+          } else {
+            updatePaged(wrap, targetPage);
+          }
           return;
         }
       }/* @section end */
@@ -277,15 +308,26 @@
         return;
       }
       /* @section save */if (t.hasAttribute("data-tw-save")) {
-        handleSave(t);
+        var lockSave = t.hasAttribute("data-tw-lock") && typeof setLoading === "function";
+        if (lockSave) setLoading(true, t.getAttribute("data-tw-saving") || "Saving...");
+        var pSave = handleSave(t);
+        if (lockSave && pSave && pSave.then) pSave.then(function () { setLoading(false); }, function () { setLoading(false); });
         return;
       }/* @section end */
       if (t.hasAttribute("data-tw-req")) {
-        sendRequest(t.getAttribute("data-tw-req")).catch(function (err) {
+        /* @section overlay */var lockReq = t.hasAttribute("data-tw-lock");
+        if (lockReq) setLoading(true, t.getAttribute("data-tw-loading") || "Loading...");/* @section end */
+        var pReq = sendRequest(t.getAttribute("data-tw-req")).catch(function (err) {
           emit("error", err);
         });
+        /* @section overlay */if (lockReq && pReq && pReq.then) pReq.then(function () { setLoading(false); }, function () { setLoading(false); });/* @section end */
         return;
       }
+      /* @section overlay */if (t.hasAttribute("data-tw-lock")) {
+        setLoading(true, t.getAttribute("data-tw-loading") || "Loading...");
+        emit("lock", { el: t });
+        return;
+      }/* @section end */
       if (t.hasAttribute("data-tw-link")) {
         var url = t.getAttribute("data-tw-link");
         if (tg && typeof tg.openLink === "function") tg.openLink(url);
@@ -326,6 +368,7 @@
     setDirty: setDirty,
     request: sendRequest,
     applyTheme: applyTheme,
+    /* @section overlay */setLoading: setLoading,/* @section end */
     on: function (name, fn) {
       (listeners[name] = listeners[name] || []).push(fn);
     }

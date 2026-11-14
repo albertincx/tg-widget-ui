@@ -88,7 +88,8 @@ const SECTION_MATCHERS = {
   stepper: /tw-stepper/,
   chips: /tw-chips/,
   stats: /tw-stats/,
-  avatar: /tw-avatar/
+  avatar: /tw-avatar/,
+  overlay: /tw-overlay|data-tw-lock/
 };
 
 export function pruneCss(css, html) {
@@ -107,7 +108,8 @@ export function pruneJs(js, html) {
     [/data-tw-acc/, "accordion"],
     [/data-tw-step/, "stepper"],
     [/data-tw-chip/, "chips"],
-    [/data-tw-save/, "save"]
+    [/data-tw-save/, "save"],
+    [/data-tw-lock|data-tw-overlay/, "overlay"]
   ];
   for (const [rx, sec] of rules) {
     if (!rx.test(html)) {

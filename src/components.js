@@ -109,6 +109,8 @@ export function twButton({
   request = "",
   link = "",
   tgLink = "",
+  lock = false,
+  loadingLabel = "",
   disabled = false
 } = {}) {
   const variantClass = {
@@ -132,6 +134,8 @@ export function twButton({
     request ? `data-tw-req="${esc(request)}"` : "",
     link ? `data-tw-link="${esc(link)}"` : "",
     tgLink ? `data-tw-tg-link="${esc(tgLink)}"` : "",
+    lock ? "data-tw-lock" : "",
+    loadingLabel ? `data-tw-loading="${esc(loadingLabel)}"` : "",
     disabled ? "disabled" : ""
   ]
     .filter(Boolean)
@@ -152,11 +156,13 @@ export function twSaveButton({
   errorLabel = "Error",
   statusText = "",
   autoDisable = false,
+  lock = false,
   block = false
 } = {}) {
   const cls = ["tw-btn", block ? "tw-btn-block" : ""].filter(Boolean).join(" ");
   const dis = autoDisable ? " data-tw-auto-disable disabled" : "";
-  const btn = `<button type="button" class="${cls}" data-tw-save="${esc(action)}" data-tw-label="${esc(label)}" data-tw-saving="${esc(savingLabel)}" data-tw-saved="${esc(savedLabel)}" data-tw-error="${esc(errorLabel)}"${dis}>${esc(label)}</button>`;
+  const lk = lock ? " data-tw-lock" : "";
+  const btn = `<button type="button" class="${cls}" data-tw-save="${esc(action)}" data-tw-label="${esc(label)}" data-tw-saving="${esc(savingLabel)}" data-tw-saved="${esc(savedLabel)}" data-tw-error="${esc(errorLabel)}"${dis}${lk}>${esc(label)}</button>`;
 
   if (!statusText) return btn;
   return `<div class="tw-save-bar"><span class="tw-save-status">${esc(statusText)}</span>${btn}</div>`;
@@ -215,19 +221,21 @@ export function twPagination({
   totalPages = 1,
   prevLabel = "‹",
   nextLabel = "›",
-  action = "page"
+  action = "page",
+  lock = true
 } = {}) {
   const p = Math.max(1, Number(page));
   const total = Math.max(1, Number(totalPages));
+  const lk = lock ? " data-tw-lock" : "";
   const prevReq = JSON.stringify({ action, page: p - 1 });
   const nextReq = JSON.stringify({ action, page: p + 1 });
-  const prevBtn = `<button type="button" class="tw-btn tw-btn-sm tw-btn-sec"${p <= 1 ? " disabled" : ` data-tw-req="${esc(prevReq)}"`}>${esc(prevLabel)}</button>`;
-  const nextBtn = `<button type="button" class="tw-btn tw-btn-sm tw-btn-sec"${p >= total ? " disabled" : ` data-tw-req="${esc(nextReq)}"`}>${esc(nextLabel)}</button>`;
+  const prevBtn = `<button type="button" class="tw-btn tw-btn-sm tw-btn-sec"${p <= 1 ? " disabled" : ` data-tw-req="${esc(prevReq)}"${lk}`}>${esc(prevLabel)}</button>`;
+  const nextBtn = `<button type="button" class="tw-btn tw-btn-sm tw-btn-sec"${p >= total ? " disabled" : ` data-tw-req="${esc(nextReq)}"${lk}`}>${esc(nextLabel)}</button>`;
   const nums = pageRange(p, total)
     .map((n) =>
       n === "..."
         ? '<span class="tw-pg-dots">...</span>'
-        : `<button type="button" class="tw-pg-num${n === p ? " tw-pg-act" : ""}"${n === p ? ' aria-current="page"' : ` data-tw-req="${esc(JSON.stringify({ action, page: n }))}"`}>${n}</button>`
+        : `<button type="button" class="tw-pg-num${n === p ? " tw-pg-act" : ""}"${n === p ? ' aria-current="page"' : ` data-tw-req="${esc(JSON.stringify({ action, page: n }))}"${lk}`}>${n}</button>`
     )
     .join("");
   return `<div class="tw-pager">${prevBtn}<div class="tw-pager-nums">${nums}</div>${nextBtn}</div>`;
@@ -240,7 +248,8 @@ export function twPagedList({
   page = 1,
   prevLabel = "‹",
   nextLabel = "›",
-  emptyText = "Empty"
+  emptyText = "Empty",
+  lock = false
 } = {}) {
   if (!items.length) {
     return twList({ label, items: [twEmpty({ title: emptyText })] });
@@ -248,6 +257,7 @@ export function twPagedList({
   const size = Math.max(1, Number(pageSize));
   const total = Math.max(1, Math.ceil(items.length / size));
   const cur = Math.max(1, Math.min(total, Number(page)));
+  const lk = lock ? ` data-tw-lock="${typeof lock === "number" ? lock : 300}"` : "";
   const nums = pageRange(cur, total)
     .map((n) =>
       n === "..."
@@ -259,7 +269,7 @@ export function twPagedList({
     total > 1
       ? `<div class="tw-pager"><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-prev${cur <= 1 ? " disabled" : ""}>${esc(prevLabel)}</button><div class="tw-pager-nums">${nums}</div><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-next${cur >= total ? " disabled" : ""}>${esc(nextLabel)}</button></div>`
       : "";
-  return `<div class="tw-root" data-tw-paged data-tw-size="${size}" data-tw-page="${cur}">${twList({ label, items })}${pager}</div>`;
+  return `<div class="tw-root" data-tw-paged data-tw-size="${size}" data-tw-page="${cur}"${lk}>${twList({ label, items })}${pager}</div>`;
 }
 
 export function twDetailView({ id, title = "", backLabel = "Back", content = "" } = {}) {
@@ -370,4 +380,8 @@ export function twAvatar({ name = "", src = "", size = "md" } = {}) {
     ? (parts[0][0] + parts[1][0]).toUpperCase()
     : (parts[0] ? parts[0].slice(0, 2).toUpperCase() : "?");
   return `<span class="${cls}" aria-hidden="true">${esc(initials)}</span>`;
+}
+
+export function twLoadingOverlay({ text = "Loading..." } = {}) {
+  return `<div class="tw-overlay" data-tw-overlay hidden role="status" aria-live="polite" aria-busy="true"><div class="tw-overlay-box"><span class="tw-spinner" aria-hidden="true"></span><span class="tw-overlay-text">${esc(text)}</span></div></div>`;
 }
