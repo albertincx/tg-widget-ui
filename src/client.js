@@ -79,15 +79,18 @@
     var doc = root.document;
     if (!doc) return;
     var ov = doc.querySelector("[data-tw-overlay]");
-    if (!ov && flag && doc.body && doc.createElement) {
-      ov = doc.createElement("div");
-      ov.className = "tw-overlay";
-      ov.setAttribute("data-tw-overlay", "");
-      ov.setAttribute("role", "status");
-      ov.setAttribute("aria-live", "polite");
-      ov.setAttribute("aria-busy", "true");
-      ov.innerHTML = '<div class="tw-overlay-box"><span class="tw-spinner" aria-hidden="true"></span><span class="tw-overlay-text"></span></div>';
-      doc.body.appendChild(ov);
+    if (!ov && flag && doc.createElement) {
+      var host = doc.querySelector(".tw-root") || doc.body;
+      if (host) {
+        ov = doc.createElement("div");
+        ov.className = "tw-overlay";
+        ov.setAttribute("data-tw-overlay", "");
+        ov.setAttribute("role", "status");
+        ov.setAttribute("aria-live", "polite");
+        ov.setAttribute("aria-busy", "true");
+        ov.innerHTML = '<div class="tw-overlay-box"><span class="tw-spinner" aria-hidden="true"></span><span class="tw-overlay-text"></span></div>';
+        host.appendChild(ov);
+      }
     }
     if (ov) {
       var tx = ov.querySelector(".tw-overlay-text");

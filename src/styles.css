@@ -73,6 +73,7 @@ body {
 }
 
 .tw-root {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -551,9 +552,10 @@ button.tw-item:active { background: var(--tw-sep); }
 
 /* @section overlay */
 .tw-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 9999;
+  z-index: 99;
+  border-radius: var(--tw-r);
   display: flex;
   align-items: center;
   justify-content: center;
