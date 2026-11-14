@@ -11,6 +11,8 @@ An ultra-lightweight, zero-dependency UI component library and HTML compiler for
 
 `#telegram` `#telegram-bot-api` `#telegram-widgets` `#html-widgets` `#bot-api-10-4` `#ui-library` `#quickjs` `#zero-dependency`
 
+![tg-widget-ui playground preview](docs/preview.jpg)
+
 ---
 
 ## Why `tg-widget-ui`?

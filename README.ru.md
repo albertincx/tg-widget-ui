@@ -11,6 +11,8 @@
 
 `#telegram` `#telegram-bot-api` `#telegram-widgets` `#html-widgets` `#bot-api-10-4` `#ui-library` `#quickjs` `#zero-dependency`
 
+![Превью tg-widget-ui в песочнице](docs/preview.jpg)
+
 ---
 
 ## Зачем нужен `tg-widget-ui`?
