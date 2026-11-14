@@ -42,6 +42,17 @@
       } else if (role === "radiogroup") {
         var checked = el.querySelector('[role="radio"][aria-checked="true"]');
         state[name] = checked ? checked.getAttribute("data-tw-value") : null;
+      /* @section stepper */} else if (el.hasAttribute("data-tw-stepper")) {
+        state[name] = Number(el.getAttribute("data-tw-val") || "0");/* @section end */
+      /* @section chips */} else if (el.hasAttribute("data-tw-chips")) {
+        var pressed = el.querySelectorAll('[data-tw-chip][aria-pressed="true"]');
+        if (el.hasAttribute("data-tw-multi")) {
+          var vals = [];
+          for (var j = 0; j < pressed.length; j++) vals.push(pressed[j].getAttribute("data-tw-value"));
+          state[name] = vals;
+        } else {
+          state[name] = pressed.length ? pressed[0].getAttribute("data-tw-value") : null;
+        }/* @section end */
       }
     }
     return state;
@@ -80,7 +91,7 @@
     return Promise.resolve({ ok: true, local: true, payload: payload });
   }
 
-  function handleSave(btn) {
+  /* @section save */function handleSave(btn) {
     var action = btn.getAttribute("data-tw-save") || "save";
     var savingLabel = btn.getAttribute("data-tw-saving") || "Saving...";
     var savedLabel = btn.getAttribute("data-tw-saved") || "Saved";
@@ -104,7 +115,7 @@
         emit("error", err);
       }
     );
-  }
+  }/* @section end */
 
   /* @section paged */function buildNums(p, total) {
     var arr = [];
@@ -149,15 +160,18 @@
     if (next) next.disabled = p >= total;
   }/* @section end */
 
+  function up(el, attr) {
+    while (el && (!el.hasAttribute || !el.hasAttribute(attr))) el = el.parentElement;
+    return el;
+  }
+
   function onClick(e) {
     var t = e.target;
     while (t && t !== root.document) {
-      if (t.getAttribute && t.getAttribute("aria-disabled") === "true") return;
-      /* @section paged */if (t.hasAttribute && (t.hasAttribute("data-tw-prev") || t.hasAttribute("data-tw-next") || t.hasAttribute("data-tw-page-btn"))) {
-        var wrap = t.parentElement;
-        while (wrap && (!wrap.hasAttribute || !wrap.hasAttribute("data-tw-paged"))) {
-          wrap = wrap.parentElement;
-        }
+      if (!t.hasAttribute) { t = t.parentElement; continue; }
+      if (t.getAttribute("aria-disabled") === "true") return;
+      /* @section paged */if (t.hasAttribute("data-tw-prev") || t.hasAttribute("data-tw-next") || t.hasAttribute("data-tw-page-btn")) {
+        var wrap = up(t.parentElement, "data-tw-paged");
         if (wrap) {
           var targetPage = t.hasAttribute("data-tw-page-btn")
             ? parseInt(t.getAttribute("data-tw-page-btn"), 10)
@@ -166,10 +180,9 @@
           return;
         }
       }/* @section end */
-      /* @section detail */if (t.hasAttribute && t.hasAttribute("data-tw-open")) {
+      /* @section detail */if (t.hasAttribute("data-tw-open")) {
         var id = t.getAttribute("data-tw-open");
-        var md = t.parentElement;
-        while (md && (!md.hasAttribute || !md.hasAttribute("data-tw-md"))) md = md.parentElement;
+        var md = up(t.parentElement, "data-tw-md");
         if (md) {
           var m = md.querySelector("[data-tw-master]");
           var v = md.querySelector('[data-tw-view="' + id + '"]');
@@ -177,9 +190,8 @@
         }
         return;
       }
-      if (t.hasAttribute && t.hasAttribute("data-tw-back")) {
-        var md2 = t.parentElement;
-        while (md2 && (!md2.hasAttribute || !md2.hasAttribute("data-tw-md"))) md2 = md2.parentElement;
+      if (t.hasAttribute("data-tw-back")) {
+        var md2 = up(t.parentElement, "data-tw-md");
         if (md2) {
           var views = md2.querySelectorAll("[data-tw-view]");
           for (var vi = 0; vi < views.length; vi++) views[vi].hidden = true;
@@ -188,7 +200,56 @@
         }
         return;
       }/* @section end */
-      var role = t.getAttribute ? t.getAttribute("role") : null;
+      /* @section tabs */if (t.hasAttribute("data-tw-tab")) {
+        var tabId = t.getAttribute("data-tw-tab"), tr = up(t.parentElement, "data-tw-tabs");
+        if (tr) {
+          var ts = tr.querySelectorAll("[data-tw-tab]"), ps = tr.querySelectorAll("[data-tw-panel]"), i;
+          for (i = 0; i < ts.length; i++) ts[i].setAttribute("aria-selected", ts[i] === t ? "true" : "false");
+          for (i = 0; i < ps.length; i++) ps[i].hidden = ps[i].getAttribute("data-tw-panel") !== tabId;
+          emit("tab", { id: tabId, el: t });
+        }
+        return;
+      }/* @section end */
+      /* @section accordion */if (t.hasAttribute("data-tw-acc")) {
+        var exp = t.getAttribute("aria-expanded") === "true";
+        t.setAttribute("aria-expanded", exp ? "false" : "true");
+        if (t.nextElementSibling) t.nextElementSibling.hidden = exp;
+        emit("accordion", { expanded: !exp, el: t });
+        return;
+      }/* @section end */
+      /* @section stepper */if (t.hasAttribute("data-tw-step")) {
+        var st = up(t.parentElement, "data-tw-stepper");
+        if (st && st.getAttribute("aria-disabled") !== "true") {
+          var cur = +st.getAttribute("data-tw-val"), mn = +st.getAttribute("data-tw-min"), mx = +st.getAttribute("data-tw-max"),
+              nv = Math.max(mn, Math.min(mx, cur + (+t.getAttribute("data-tw-step")) * (+st.getAttribute("data-tw-step-by") || 1)));
+          if (nv !== cur) {
+            st.setAttribute("data-tw-val", String(nv));
+            var u = st.getAttribute("data-tw-unit"), ve = st.querySelector(".tw-step-val");
+            if (ve) ve.textContent = u ? nv + " " + u : String(nv);
+            st.querySelector('[data-tw-step="-1"]').disabled = nv <= mn;
+            st.querySelector('[data-tw-step="1"]').disabled = nv >= mx;
+            setDirty(true);
+            emit("change", { name: st.getAttribute("data-tw-name"), value: nv, el: st });
+          }
+        }
+        return;
+      }/* @section end */
+      /* @section chips */if (t.hasAttribute("data-tw-chip")) {
+        var cg = up(t.parentElement, "data-tw-chips");
+        if (cg) {
+          if (cg.hasAttribute("data-tw-multi")) {
+            t.setAttribute("aria-pressed", t.getAttribute("aria-pressed") === "true" ? "false" : "true");
+          } else {
+            var ac = cg.querySelectorAll("[data-tw-chip]");
+            for (var ci = 0; ci < ac.length; ci++) ac[ci].setAttribute("aria-pressed", ac[ci] === t ? "true" : "false");
+          }
+          setDirty(true);
+          var cn = cg.getAttribute("data-tw-name");
+          emit("change", { name: cn, value: getState()[cn], el: cg });
+        }
+        return;
+      }/* @section end */
+      var role = t.getAttribute("role");
       if (role === "checkbox" || role === "switch") {
         var next = t.getAttribute("aria-checked") !== "true";
         t.setAttribute("aria-checked", next ? "true" : "false");
@@ -215,23 +276,23 @@
         }
         return;
       }
-      if (t.hasAttribute && t.hasAttribute("data-tw-save")) {
+      /* @section save */if (t.hasAttribute("data-tw-save")) {
         handleSave(t);
         return;
-      }
-      if (t.hasAttribute && t.hasAttribute("data-tw-req")) {
+      }/* @section end */
+      if (t.hasAttribute("data-tw-req")) {
         sendRequest(t.getAttribute("data-tw-req")).catch(function (err) {
           emit("error", err);
         });
         return;
       }
-      if (t.hasAttribute && t.hasAttribute("data-tw-link")) {
+      if (t.hasAttribute("data-tw-link")) {
         var url = t.getAttribute("data-tw-link");
         if (tg && typeof tg.openLink === "function") tg.openLink(url);
         else emit("link", url);
         return;
       }
-      if (t.hasAttribute && t.hasAttribute("data-tw-tg-link")) {
+      if (t.hasAttribute("data-tw-tg-link")) {
         var tgUrl = t.getAttribute("data-tw-tg-link");
         if (tg && typeof tg.openTelegramLink === "function") tg.openTelegramLink(tgUrl);
         else emit("tgLink", tgUrl);

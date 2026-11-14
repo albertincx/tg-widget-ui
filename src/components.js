@@ -270,3 +270,104 @@ export function twDetailView({ id, title = "", backLabel = "Back", content = "" 
 export function twMasterDetail({ master = "", details = [] } = {}) {
   return `<div class="tw-root" data-tw-md><div class="tw-root" data-tw-master>${master}</div>${details.join("")}</div>`;
 }
+
+export function twTabs({ tabs = [], activeId = "", label = "Tabs" } = {}) {
+  if (!tabs.length) return "";
+  const active = tabs.some((t) => t.id === activeId) ? activeId : tabs[0].id;
+  const bar = tabs
+    .map((t) => {
+      const sel = t.id === active;
+      return `<button type="button" class="tw-tab" role="tab" aria-selected="${sel ? "true" : "false"}" data-tw-tab="${esc(t.id)}">${esc(t.label)}</button>`;
+    })
+    .join("");
+  const panels = tabs
+    .map((t) => {
+      const sel = t.id === active;
+      return `<div class="tw-tab-panel" role="tabpanel" data-tw-panel="${esc(t.id)}"${sel ? "" : " hidden"}>${t.content || ""}</div>`;
+    })
+    .join("");
+  return `<div class="tw-tabs" data-tw-tabs><div class="tw-tablist" role="tablist" aria-label="${esc(label)}">${bar}</div>${panels}</div>`;
+}
+
+export function twAccordion({ items = [], label = "" } = {}) {
+  const head = label ? `<div class="tw-sec-label">${esc(label)}</div>` : "";
+  const rows = items
+    .map((item) => {
+      const open = Boolean(item.open);
+      const sub = item.subtitle ? `<span class="tw-item-desc">${esc(item.subtitle)}</span>` : "";
+      return `<div class="tw-acc-item"><button type="button" class="tw-acc-btn" aria-expanded="${open ? "true" : "false"}" data-tw-acc><span class="tw-item-body"><span class="tw-item-title">${esc(item.title)}</span>${sub}</span><span class="tw-acc-ico" aria-hidden="true">&#9662;</span></button><div class="tw-acc-panel"${open ? "" : " hidden"}>${item.content || ""}</div></div>`;
+    })
+    .join("");
+  return `${head}<div class="tw-acc">${rows}</div>`;
+}
+
+export function twStepper({
+  name,
+  label,
+  description = "",
+  value = 0,
+  min = 0,
+  max = 99,
+  step = 1,
+  unit = "",
+  disabled = false
+} = {}) {
+  const val = Math.max(Number(min), Math.min(Number(max), Number(value)));
+  const descHtml = description ? `<span class="tw-item-desc">${esc(description)}</span>` : "";
+  const unitAttr = unit ? ` data-tw-unit="${esc(unit)}"` : "";
+  const disMinus = disabled || val <= min ? " disabled" : "";
+  const disPlus = disabled || val >= max ? " disabled" : "";
+  const display = unit ? `${val} ${esc(unit)}` : `${val}`;
+  return `<div class="tw-item tw-stepper" data-tw-name="${esc(name)}" data-tw-stepper data-tw-val="${val}" data-tw-min="${min}" data-tw-max="${max}" data-tw-step-by="${step}"${unitAttr}${disabled ? ' aria-disabled="true"' : ""}><span class="tw-item-body"><span class="tw-item-title">${esc(label)}</span>${descHtml}</span><span class="tw-step-ctrl"><button type="button" class="tw-step-btn" data-tw-step="-1" aria-label="Decrease ${esc(label)}"${disMinus}>&minus;</button><span class="tw-step-val">${display}</span><button type="button" class="tw-step-btn" data-tw-step="1" aria-label="Increase ${esc(label)}"${disPlus}>+</button></span></div>`;
+}
+
+export function twChipGroup({
+  name,
+  label = "",
+  options = [],
+  value = null,
+  multiple = false,
+  disabled = false
+} = {}) {
+  const head = label ? `<div class="tw-sec-label">${esc(label)}</div>` : "";
+  const selected = new Set(Array.isArray(value) ? value : value !== null && value !== undefined ? [value] : []);
+  const multiAttr = multiple ? " data-tw-multi" : "";
+  const chips = options
+    .map((opt) => {
+      const pressed = selected.has(opt.value) ? "true" : "false";
+      const dis = disabled || opt.disabled ? " disabled" : "";
+      return `<button type="button" class="tw-chip" data-tw-chip data-tw-value="${esc(opt.value)}" aria-pressed="${pressed}"${dis}>${esc(opt.label)}</button>`;
+    })
+    .join("");
+  return `${head}<div class="tw-chips" role="group"${label ? ` aria-label="${esc(label)}"` : ""} data-tw-name="${esc(name)}" data-tw-chips${multiAttr}>${chips}</div>`;
+}
+
+export function twStatGrid({ items = [], columns = 2 } = {}) {
+  const cols = Math.max(1, Math.min(4, Number(columns) || 2));
+  const cards = items
+    .map((item) => {
+      const cls = {
+        accent: " tw-stat-accent",
+        success: " tw-stat-ok",
+        warning: " tw-stat-warn",
+        danger: " tw-stat-err"
+      }[item.variant] || "";
+      const hint = item.hint ? `<div class="tw-stat-hint">${esc(item.hint)}</div>` : "";
+      return `<div class="tw-stat${cls}"><div class="tw-stat-label">${esc(item.label)}</div><div class="tw-stat-val">${esc(item.value)}</div>${hint}</div>`;
+    })
+    .join("");
+  return `<div class="tw-stats" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${cards}</div>`;
+}
+
+export function twAvatar({ name = "", src = "", size = "md" } = {}) {
+  const sz = { sm: "tw-av-sm", md: "", lg: "tw-av-lg" }[size] || "";
+  const cls = ["tw-avatar", sz].filter(Boolean).join(" ");
+  if (src) {
+    return `<span class="${cls}"><img src="${esc(src)}" alt="${esc(name)}"></span>`;
+  }
+  const parts = String(name).trim().split(/\s+/).filter(Boolean);
+  const initials = parts.length >= 2
+    ? (parts[0][0] + parts[1][0]).toUpperCase()
+    : (parts[0] ? parts[0].slice(0, 2).toUpperCase() : "?");
+  return `<span class="${cls}" aria-hidden="true">${esc(initials)}</span>`;
+}

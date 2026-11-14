@@ -21,6 +21,12 @@ import {
   twPagedList,
   twDetailView,
   twMasterDetail,
+  twTabs,
+  twAccordion,
+  twStepper,
+  twChipGroup,
+  twStatGrid,
+  twAvatar,
   pageRange
 } from "../src/index.js";
 
@@ -151,4 +157,88 @@ test("twMasterDetail and twDetailView render item detail screen with Back button
   assert.match(html, /data-tw-open="order-1"/);
   assert.match(html, /data-tw-view="order-1" hidden/);
   assert.match(html, /data-tw-back/);
+});
+
+test("twTabs renders accessible tablist and panels with initial active state", () => {
+  const html = twTabs({
+    label: "Sections",
+    activeId: "b",
+    tabs: [
+      { id: "a", label: "First", content: "<p>A</p>" },
+      { id: "b", label: "Second", content: "<p>B</p>" }
+    ]
+  });
+  assert.match(html, /role="tablist" aria-label="Sections"/);
+  assert.match(html, /role="tab" aria-selected="false" data-tw-tab="a"/);
+  assert.match(html, /role="tab" aria-selected="true" data-tw-tab="b"/);
+  assert.match(html, /data-tw-panel="a" hidden/);
+  assert.match(html, /data-tw-panel="b"><p>B<\/p>/);
+});
+
+test("twAccordion renders collapsible items with aria-expanded", () => {
+  const html = twAccordion({
+    label: "FAQ",
+    items: [
+      { title: "Q1", subtitle: "Hint", content: "Answer 1", open: true },
+      { title: "Q2", content: "Answer 2" }
+    ]
+  });
+  assert.match(html, /tw-acc/);
+  assert.match(html, /aria-expanded="true" data-tw-acc/);
+  assert.match(html, /aria-expanded="false" data-tw-acc/);
+  assert.match(html, /<div class="tw-acc-panel" hidden>Answer 2<\/div>/);
+});
+
+test("twStepper renders value, bounds, and disabled boundary button", () => {
+  const html = twStepper({ name: "qty", label: "Quantity", value: 1, min: 1, max: 5, unit: "pcs" });
+  assert.match(html, /data-tw-name="qty"/);
+  assert.match(html, /data-tw-stepper/);
+  assert.match(html, /data-tw-val="1"/);
+  assert.match(html, /data-tw-step="-1" aria-label="Decrease Quantity" disabled/);
+  assert.match(html, /1 pcs/);
+});
+
+test("twChipGroup renders single and multi-select chip groups", () => {
+  const single = twChipGroup({
+    name: "plan",
+    label: "Plan",
+    value: "pro",
+    options: [
+      { value: "free", label: "Free" },
+      { value: "pro", label: "Pro" }
+    ]
+  });
+  assert.match(single, /data-tw-chips/);
+  assert.doesNotMatch(single, /data-tw-multi/);
+  assert.match(single, /data-tw-value="pro" aria-pressed="true"/);
+
+  const multi = twChipGroup({
+    name: "tags",
+    multiple: true,
+    value: ["a", "b"],
+    options: [
+      { value: "a", label: "A" },
+      { value: "b", label: "B" }
+    ]
+  });
+  assert.match(multi, /data-tw-multi/);
+  assert.match(multi, /data-tw-value="a" aria-pressed="true"/);
+  assert.match(multi, /data-tw-value="b" aria-pressed="true"/);
+});
+
+test("twStatGrid and twAvatar render stats and initials/images", () => {
+  const stats = twStatGrid({
+    columns: 2,
+    items: [
+      { label: "Balance", value: "12.4 TON", hint: "Mainnet", variant: "accent" },
+      { label: "Status", value: "OK", variant: "success" }
+    ]
+  });
+  assert.match(stats, /tw-stats/);
+  assert.match(stats, /tw-stat-accent/);
+  assert.match(stats, /12\.4 TON/);
+
+  const avText = twAvatar({ name: "Albert Nuriev", size: "lg" });
+  assert.match(avText, /tw-avatar tw-av-lg/);
+  assert.match(avText, />AN</);
 });

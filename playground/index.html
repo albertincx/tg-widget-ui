@@ -60,94 +60,161 @@
             <h2 class="tw-title">Release Checklist</h2>
             <p class="tw-sub">Interactive Telegram HTML Widget (Bot API 10.4)</p>
           </div>
-          <div class="tw-prog" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="2">
-            <div class="tw-prog-fill" style="width:66.7%"></div>
-          </div>
-          <div class="tw-sec-label">Tasks</div>
-          <div class="tw-list" role="list">
-            <button type="button" class="tw-item" role="checkbox" aria-checked="true" data-tw-name="tests">
-              <span class="tw-cb-box" aria-hidden="true">
-                <svg class="tw-ico-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                <svg class="tw-ico-dash" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </span>
-              <span class="tw-item-body">
-                <span class="tw-item-title">Run unit tests</span>
-                <span class="tw-item-desc">Zero-dependency node:test</span>
-              </span>
-            </button>
-            <button type="button" class="tw-item" role="checkbox" aria-checked="false" data-tw-name="deploy">
-              <span class="tw-cb-box" aria-hidden="true">
-                <svg class="tw-ico-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                <svg class="tw-ico-dash" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </span>
-              <span class="tw-item-body">
-                <span class="tw-item-title">Publish widget</span>
-                <span class="tw-item-desc">Verify 4 KB zlib-9 budget</span>
-              </span>
-            </button>
-            <button type="button" class="tw-item" role="switch" aria-checked="true" data-tw-name="notify">
-              <span class="tw-item-body">
-                <span class="tw-item-title">Notify chat on save</span>
-              </span>
-              <span class="tw-sw-track" aria-hidden="true"><span class="tw-sw-thumb"></span></span>
-            </button>
-            <button type="button" class="tw-item" data-tw-req='{"action":"open_ton"}'>
-              <span class="tw-item-body">
-                <span class="tw-item-title">TON Wallet</span>
-                <span class="tw-item-desc">Bot API 10.4 query</span>
-              </span>
-              <span class="tw-item-trail"><span class="tw-badge tw-badge-ok">Ready</span></span>
-            </button>
-          </div>
-          <div class="tw-root" data-tw-md>
-            <div class="tw-root" data-tw-master>
-              <div class="tw-root" data-tw-paged data-tw-size="2" data-tw-page="1">
-                <div class="tw-sec-label">Paged List (tap item for details)</div>
-                <div class="tw-list" role="list">
-                  <button type="button" class="tw-item" data-tw-open="item-1"><span class="tw-item-body"><span class="tw-item-title">Order #101 — TON Transfer</span><span class="tw-item-desc">Tap to view details</span></span><span class="tw-item-trail">&rsaquo;</span></button>
-                  <button type="button" class="tw-item" data-tw-open="item-2"><span class="tw-item-body"><span class="tw-item-title">Order #102 — Bot Subscription</span><span class="tw-item-desc">Tap to view details</span></span><span class="tw-item-trail">&rsaquo;</span></button>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #103</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #104</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #105</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #106</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #107</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #108</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #109</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #110</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #111</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #112</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #113</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #114</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #115</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #116</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #117</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #118</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #119</span></span></div>
-                  <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #120</span></span></div>
+          <div class="tw-tabs" data-tw-tabs>
+            <div class="tw-tablist" role="tablist" aria-label="Widget sections">
+              <button type="button" class="tw-tab" role="tab" aria-selected="true" data-tw-tab="overview">Overview</button>
+              <button type="button" class="tw-tab" role="tab" aria-selected="false" data-tw-tab="controls">Controls</button>
+              <button type="button" class="tw-tab" role="tab" aria-selected="false" data-tw-tab="orders">Orders</button>
+            </div>
+            <div class="tw-tab-panel" role="tabpanel" data-tw-panel="overview">
+              <div class="tw-stats" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+                <div class="tw-stat tw-stat-accent">
+                  <div class="tw-stat-label">Balance</div>
+                  <div class="tw-stat-val">12.4 TON</div>
+                  <div class="tw-stat-hint">Mainnet</div>
                 </div>
-                <div class="tw-pager">
-                  <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-prev disabled>&lsaquo;</button>
-                  <div class="tw-pager-nums"></div>
-                  <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-next>&rsaquo;</button>
+                <div class="tw-stat tw-stat-ok">
+                  <div class="tw-stat-label">Budget</div>
+                  <div class="tw-stat-val">2.1 KB</div>
+                  <div class="tw-stat-hint">zlib-9 / 4 KB max</div>
+                </div>
+              </div>
+              <div class="tw-prog" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="2">
+                <div class="tw-prog-fill" style="width:66.7%"></div>
+              </div>
+              <div class="tw-sec-label">Tasks</div>
+              <div class="tw-list" role="list">
+                <button type="button" class="tw-item" role="checkbox" aria-checked="true" data-tw-name="tests">
+                  <span class="tw-cb-box" aria-hidden="true">
+                    <svg class="tw-ico-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg class="tw-ico-dash" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </span>
+                  <span class="tw-item-body">
+                    <span class="tw-item-title">Run unit tests</span>
+                    <span class="tw-item-desc">Zero-dependency node:test</span>
+                  </span>
+                </button>
+                <button type="button" class="tw-item" role="checkbox" aria-checked="false" data-tw-name="deploy">
+                  <span class="tw-cb-box" aria-hidden="true">
+                    <svg class="tw-ico-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg class="tw-ico-dash" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </span>
+                  <span class="tw-item-body">
+                    <span class="tw-item-title">Publish widget</span>
+                    <span class="tw-item-desc">Verify 4 KB zlib-9 budget</span>
+                  </span>
+                </button>
+                <button type="button" class="tw-item" role="switch" aria-checked="true" data-tw-name="notify">
+                  <span class="tw-item-body">
+                    <span class="tw-item-title">Notify chat on save</span>
+                  </span>
+                  <span class="tw-sw-track" aria-hidden="true"><span class="tw-sw-thumb"></span></span>
+                </button>
+                <button type="button" class="tw-item" data-tw-req='{"action":"open_ton"}'>
+                  <span class="tw-item-lead"><span class="tw-avatar tw-av-sm" aria-hidden="true">TW</span></span>
+                  <span class="tw-item-body">
+                    <span class="tw-item-title">TON Wallet</span>
+                    <span class="tw-item-desc">Bot API 10.4 query</span>
+                  </span>
+                  <span class="tw-item-trail"><span class="tw-badge tw-badge-ok">Ready</span></span>
+                </button>
+              </div>
+            </div>
+            <div class="tw-tab-panel" role="tabpanel" data-tw-panel="controls" hidden>
+              <div class="tw-sec-label">Quick Amount</div>
+              <div class="tw-chips" role="group" aria-label="Quick Amount" data-tw-name="amount" data-tw-chips>
+                <button type="button" class="tw-chip" data-tw-chip data-tw-value="1" aria-pressed="false">1 TON</button>
+                <button type="button" class="tw-chip" data-tw-chip data-tw-value="5" aria-pressed="true">5 TON</button>
+                <button type="button" class="tw-chip" data-tw-chip data-tw-value="10" aria-pressed="false">10 TON</button>
+                <button type="button" class="tw-chip" data-tw-chip data-tw-value="25" aria-pressed="false">25 TON</button>
+              </div>
+              <div class="tw-list">
+                <div class="tw-item tw-stepper" data-tw-name="seats" data-tw-stepper data-tw-val="2" data-tw-min="1" data-tw-max="10" data-tw-step-by="1">
+                  <span class="tw-item-body">
+                    <span class="tw-item-title">Seats</span>
+                    <span class="tw-item-desc">Min 1, max 10</span>
+                  </span>
+                  <span class="tw-step-ctrl">
+                    <button type="button" class="tw-step-btn" data-tw-step="-1" aria-label="Decrease Seats">&minus;</button>
+                    <span class="tw-step-val">2</span>
+                    <button type="button" class="tw-step-btn" data-tw-step="1" aria-label="Increase Seats">+</button>
+                  </span>
+                </div>
+              </div>
+              <div class="tw-sec-label">FAQ</div>
+              <div class="tw-acc">
+                <div class="tw-acc-item">
+                  <button type="button" class="tw-acc-btn" aria-expanded="false" data-tw-acc>
+                    <span class="tw-item-body">
+                      <span class="tw-item-title">How does Widget Profile 1 work?</span>
+                    </span>
+                    <span class="tw-acc-ico" aria-hidden="true">&#9662;</span>
+                  </button>
+                  <div class="tw-acc-panel" hidden>Runs inside Telegram's QuickJS + DOM shim sandbox with a 4 KB zlib-9 limit and no native form inputs.</div>
+                </div>
+                <div class="tw-acc-item">
+                  <button type="button" class="tw-acc-btn" aria-expanded="false" data-tw-acc>
+                    <span class="tw-item-body">
+                      <span class="tw-item-title">Are unused components tree-shaken?</span>
+                    </span>
+                    <span class="tw-acc-ico" aria-hidden="true">&#9662;</span>
+                  </button>
+                  <div class="tw-acc-panel" hidden>Yes! buildWidget() strips CSS and JS sections for any component not present in your HTML.</div>
                 </div>
               </div>
             </div>
-            <div class="tw-root" data-tw-view="item-1" hidden>
-              <div class="tw-detail-head">
-                <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-back>&larr; Back</button>
-                <h3 class="tw-title">Order #101</h3>
-              </div>
-              <div class="tw-card">
-                <p class="tw-sub" style="margin:0">Status: Confirmed &bull; Amount: 2.5 TON</p>
-              </div>
-            </div>
-            <div class="tw-root" data-tw-view="item-2" hidden>
-              <div class="tw-detail-head">
-                <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-back>&larr; Back</button>
-                <h3 class="tw-title">Order #102</h3>
-              </div>
-              <div class="tw-card">
-                <p class="tw-sub" style="margin:0">Status: Active &bull; Plan: Pro</p>
+            <div class="tw-tab-panel" role="tabpanel" data-tw-panel="orders" hidden>
+              <div class="tw-root" data-tw-md>
+                <div class="tw-root" data-tw-master>
+                  <div class="tw-root" data-tw-paged data-tw-size="2" data-tw-page="1">
+                    <div class="tw-sec-label">Paged List (tap item for details)</div>
+                    <div class="tw-list" role="list">
+                      <button type="button" class="tw-item" data-tw-open="item-1"><span class="tw-item-body"><span class="tw-item-title">Order #101 — TON Transfer</span><span class="tw-item-desc">Tap to view details</span></span><span class="tw-item-trail">&rsaquo;</span></button>
+                      <button type="button" class="tw-item" data-tw-open="item-2"><span class="tw-item-body"><span class="tw-item-title">Order #102 — Bot Subscription</span><span class="tw-item-desc">Tap to view details</span></span><span class="tw-item-trail">&rsaquo;</span></button>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #103</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #104</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #105</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #106</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #107</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #108</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #109</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #110</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #111</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #112</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #113</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #114</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #115</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #116</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #117</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #118</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #119</span></span></div>
+                      <div class="tw-item"><span class="tw-item-body"><span class="tw-item-title">Order #120</span></span></div>
+                    </div>
+                    <div class="tw-pager">
+                      <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-prev disabled>&lsaquo;</button>
+                      <div class="tw-pager-nums"></div>
+                      <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-next>&rsaquo;</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="tw-root" data-tw-view="item-1" hidden>
+                  <div class="tw-detail-head">
+                    <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-back>&larr; Back</button>
+                    <h3 class="tw-title">Order #101</h3>
+                  </div>
+                  <div class="tw-card">
+                    <p class="tw-sub" style="margin:0">Status: Confirmed &bull; Amount: 2.5 TON</p>
+                  </div>
+                </div>
+                <div class="tw-root" data-tw-view="item-2" hidden>
+                  <div class="tw-detail-head">
+                    <button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-back>&larr; Back</button>
+                    <h3 class="tw-title">Order #102</h3>
+                  </div>
+                  <div class="tw-card">
+                    <p class="tw-sub" style="margin:0">Status: Active &bull; Plan: Pro</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -189,6 +256,8 @@
   <script src="../src/runtime.js"></script>
   <script>
     TwUI.on("change", function (d) { logEvent("TwUI change", d); });
+    TwUI.on("tab", function (d) { logEvent("TwUI tab", d); });
+    TwUI.on("accordion", function (d) { logEvent("TwUI accordion", d); });
     var dark = false;
     document.getElementById("pg-theme-btn").addEventListener("click", function () {
       dark = !dark;

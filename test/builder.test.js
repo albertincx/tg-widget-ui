@@ -9,7 +9,11 @@ import {
   twList,
   twCheckbox,
   twButton,
-  twSaveButton
+  twSaveButton,
+  twTabs,
+  twStepper,
+  twChipGroup,
+  twStatGrid
 } from "../src/index.js";
 
 test("buildWidget compiles full interactive widget under 32 KB raw and 4 KB zlib-9", () => {
@@ -46,4 +50,30 @@ test("validateWidget rejects forbidden native <input>, NUL bytes, and external U
   const badExternal = validateWidget('<html><head><script src="https://example.com/a.js"></script></head></html>');
   assert.equal(badExternal.withinLimits, false);
   assert.ok(badExternal.errors.some((e) => e.includes("external")));
+});
+
+test("buildWidget compiles new components under 4 KB zlib-9 and tree-shakes unused sections", () => {
+  const minimal = buildWidget({ title: "Minimal", body: twHeader({ title: "Hi" }) });
+  assert.doesNotMatch(minimal.html, /tw-tabs/);
+  assert.doesNotMatch(minimal.html, /\.tw-acc/);
+  assert.doesNotMatch(minimal.html, /data-tw-step-by/);
+
+  const full = buildWidget({
+    title: "Dashboard",
+    body: twTabs({
+      tabs: [
+        {
+          id: "main",
+          label: "Main",
+          content:
+            twStatGrid({ items: [{ label: "TON", value: "5.0", variant: "accent" }] }) +
+            twChipGroup({ name: "amt", options: [{ value: "1", label: "1 TON" }], value: "1" }) +
+            twStepper({ name: "qty", label: "Qty", value: 2 })
+        }
+      ]
+    })
+  });
+  assert.equal(full.withinLimits, true, `Errors: ${full.errors.join("; ")}`);
+  assert.match(full.html, /tw-tabs/);
+  assert.match(full.html, /tw-stats/);
 });

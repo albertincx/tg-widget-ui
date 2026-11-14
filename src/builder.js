@@ -82,7 +82,13 @@ const SECTION_MATCHERS = {
   divider: /tw-divider/,
   pager: /tw-pager/,
   detail: /tw-detail-head/,
-  empty: /tw-empty/
+  empty: /tw-empty/,
+  tabs: /tw-tabs/,
+  accordion: /tw-acc(?!ent)/,
+  stepper: /tw-stepper/,
+  chips: /tw-chips/,
+  stats: /tw-stats/,
+  avatar: /tw-avatar/
 };
 
 export function pruneCss(css, html) {
@@ -94,11 +100,19 @@ export function pruneCss(css, html) {
 
 export function pruneJs(js, html) {
   let out = js;
-  if (!/data-tw-paged/.test(html)) {
-    out = out.replace(/\/\*\s*@section\s+paged\s*\*\/[\s\S]*?\/\*\s*@section\s+end\s*\*\//g, "");
-  }
-  if (!/data-tw-open/.test(html)) {
-    out = out.replace(/\/\*\s*@section\s+detail\s*\*\/[\s\S]*?\/\*\s*@section\s+end\s*\*\//g, "");
+  const rules = [
+    [/data-tw-paged/, "paged"],
+    [/data-tw-open/, "detail"],
+    [/data-tw-tab/, "tabs"],
+    [/data-tw-acc/, "accordion"],
+    [/data-tw-step/, "stepper"],
+    [/data-tw-chip/, "chips"],
+    [/data-tw-save/, "save"]
+  ];
+  for (const [rx, sec] of rules) {
+    if (!rx.test(html)) {
+      out = out.replace(new RegExp(`/\\*\\s*@section\\s+${sec}\\s*\\*/[\\s\\S]*?/\\*\\s*@section\\s+end\\s*\\*/`, "g"), "");
+    }
   }
   return out;
 }
