@@ -68,16 +68,47 @@ export function validateWidget(html) {
   };
 }
 
+const SECTION_MATCHERS = {
+  card: /tw-card/,
+  list: /tw-list|tw-item/,
+  checkbox: /tw-cb-box/,
+  switch: /tw-sw-track/,
+  radio: /tw-rd-dot/,
+  button: /tw-btn/,
+  save: /tw-save-/,
+  badge: /tw-badge/,
+  progress: /tw-prog/,
+  banner: /tw-banner/,
+  divider: /tw-divider/,
+  pager: /tw-pager/,
+  empty: /tw-empty/
+};
+
+export function pruneCss(css, html) {
+  return css.replace(/\/\*\s*@section\s+(\w+)\s*\*\/([\s\S]*?)(?=\/\*\s*@section\s+)/g, (full, name, block) => {
+    const rx = SECTION_MATCHERS[name];
+    return !rx || rx.test(html) ? block : "";
+  });
+}
+
+export function pruneJs(js, html) {
+  if (/data-tw-paged/.test(html)) return js;
+  return js.replace(/\/\*\s*@section\s+paged\s*\*\/[\s\S]*?\/\*\s*@section\s+end\s*\*\//g, "");
+}
+
 export function buildWidget({
   title = "Telegram Widget",
   lang = "en",
   body = "",
   customCss = "",
   customJs = "",
-  includeRuntime = true
+  includeRuntime = true,
+  treeShake = true
 } = {}) {
-  const baseCss = fs.readFileSync(path.join(__dirname, "styles.css"), "utf8");
-  const baseJs = includeRuntime ? fs.readFileSync(path.join(__dirname, "runtime.js"), "utf8") : "";
+  const rawCss = fs.readFileSync(path.join(__dirname, "styles.css"), "utf8");
+  const baseCss = treeShake ? pruneCss(rawCss, body) : rawCss;
+  const rawJs = includeRuntime ? fs.readFileSync(path.join(__dirname, "runtime.js"), "utf8") : "";
+  const baseJs = treeShake && rawJs ? pruneJs(rawJs, body) : rawJs;
 
   const css = minifyCss(`${baseCss}\n${customCss}`);
   const js = minifyJs(`${baseJs}\n${customJs}`);

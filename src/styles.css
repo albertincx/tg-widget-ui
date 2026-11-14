@@ -1,56 +1,56 @@
 /* tg-widget-ui: Telegram HTML Widget UI Library (Bot API 10.4) */
 :root {
   color-scheme: light dark;
-  --tw-bg-l: #ffffff;
-  --tw-bg-d: #1c1c1e;
-  --tw-sec-l: #f2f2f7;
-  --tw-sec-d: #2c2c2e;
-  --tw-txt-l: #111111;
-  --tw-txt-d: #f5f5f7;
-  --tw-hint-l: #6e6e73;
-  --tw-hint-d: #98989f;
-  --tw-btn-l: #2481cc;
-  --tw-btn-d: #3b9eff;
-  --tw-sep-l: rgba(0, 0, 0, 0.1);
-  --tw-sep-d: rgba(255, 255, 255, 0.14);
+  --b0: #ffffff;
+  --b1: #1c1c1e;
+  --s0: #f2f2f7;
+  --s1: #2c2c2e;
+  --t0: #111111;
+  --t1: #f5f5f7;
+  --h0: #6e6e73;
+  --h1: #98989f;
+  --a0: #2481cc;
+  --a1: #3b9eff;
+  --p0: rgba(0, 0, 0, 0.1);
+  --p1: rgba(255, 255, 255, 0.14);
 
-  --tw-bg-fallback: var(--tw-bg-l);
-  --tw-sec-fallback: var(--tw-sec-l);
-  --tw-txt-fallback: var(--tw-txt-l);
-  --tw-hint-fallback: var(--tw-hint-l);
-  --tw-btn-fallback: var(--tw-btn-l);
-  --tw-sep: var(--tw-sep-l);
+  --tw-bg-f: var(--b0);
+  --tw-sec-f: var(--s0);
+  --tw-txt-f: var(--t0);
+  --tw-hint-f: var(--h0);
+  --tw-btn-f: var(--a0);
+  --tw-sep: var(--p0);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --tw-bg-fallback: var(--tw-bg-d);
-    --tw-sec-fallback: var(--tw-sec-d);
-    --tw-txt-fallback: var(--tw-txt-d);
-    --tw-hint-fallback: var(--tw-hint-d);
-    --tw-btn-fallback: var(--tw-btn-d);
-    --tw-sep: var(--tw-sep-d);
+    --tw-bg-f: var(--b1);
+    --tw-sec-f: var(--s1);
+    --tw-txt-f: var(--t1);
+    --tw-hint-f: var(--h1);
+    --tw-btn-f: var(--a1);
+    --tw-sep: var(--p1);
   }
 }
 
 @supports (color: light-dark(white, black)) {
   :root {
-    --tw-bg-fallback: light-dark(var(--tw-bg-l), var(--tw-bg-d));
-    --tw-sec-fallback: light-dark(var(--tw-sec-l), var(--tw-sec-d));
-    --tw-txt-fallback: light-dark(var(--tw-txt-l), var(--tw-txt-d));
-    --tw-hint-fallback: light-dark(var(--tw-hint-l), var(--tw-hint-d));
-    --tw-btn-fallback: light-dark(var(--tw-btn-l), var(--tw-btn-d));
-    --tw-sep: light-dark(var(--tw-sep-l), var(--tw-sep-d));
+    --tw-bg-f: light-dark(var(--b0), var(--b1));
+    --tw-sec-f: light-dark(var(--s0), var(--s1));
+    --tw-txt-f: light-dark(var(--t0), var(--t1));
+    --tw-hint-f: light-dark(var(--h0), var(--h1));
+    --tw-btn-f: light-dark(var(--a0), var(--a1));
+    --tw-sep: light-dark(var(--p0), var(--p1));
   }
 }
 
 :root {
-  --tw-bg: var(--tg-theme-bg-color, var(--tw-bg-fallback));
-  --tw-sec-bg: var(--tg-theme-secondary-bg-color, var(--tw-sec-fallback));
-  --tw-txt: var(--tg-theme-text-color, var(--tw-txt-fallback));
-  --tw-hint: var(--tg-theme-hint-color, var(--tw-hint-fallback));
-  --tw-link: var(--tg-theme-link-color, var(--tw-btn-fallback));
-  --tw-accent: var(--tg-theme-button-color, var(--tw-btn-fallback));
+  --tw-bg: var(--tg-theme-bg-color, var(--tw-bg-f));
+  --tw-sec-bg: var(--tg-theme-secondary-bg-color, var(--tw-sec-f));
+  --tw-txt: var(--tg-theme-text-color, var(--tw-txt-f));
+  --tw-hint: var(--tg-theme-hint-color, var(--tw-hint-f));
+  --tw-link: var(--tg-theme-link-color, var(--tw-btn-f));
+  --tw-accent: var(--tg-theme-button-color, var(--tw-btn-f));
   --tw-accent-txt: var(--tg-theme-button-text-color, #ffffff);
   --tw-danger: var(--tg-theme-destructive-text-color, #e53935);
   --tw-success: #2ea043;
@@ -99,16 +99,19 @@ body {
   padding: 0 4px;
 }
 
-/* Card & List */
-.tw-card, .tw-list {
+/* @section card */
+.tw-card {
   background: var(--tw-sec-bg);
   border-radius: var(--tw-r);
   overflow: hidden;
+  padding: 12px;
 }
 
-.tw-card { padding: 12px; }
-
+/* @section list */
 .tw-list {
+  background: var(--tw-sec-bg);
+  border-radius: var(--tw-r);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -188,7 +191,7 @@ button.tw-item:active { background: var(--tw-sep); }
   pointer-events: none;
 }
 
-/* Custom Checkbox (no <input> per Widget Profile 1) */
+/* @section checkbox */
 .tw-cb-box {
   width: 20px;
   height: 20px;
@@ -234,7 +237,7 @@ button.tw-item:active { background: var(--tw-sep); }
   display: none;
 }
 
-/* Switch */
+/* @section switch */
 .tw-sw-track {
   width: 40px;
   height: 24px;
@@ -256,7 +259,7 @@ button.tw-item:active { background: var(--tw-sep); }
 [aria-checked="true"] .tw-sw-track { background: var(--tw-accent); }
 [aria-checked="true"] .tw-sw-thumb { transform: translateX(16px); }
 
-/* Radio */
+/* @section radio */
 .tw-rd-dot {
   width: 20px;
   height: 20px;
@@ -280,7 +283,7 @@ button.tw-item:active { background: var(--tw-sep); }
 [aria-checked="true"] .tw-rd-dot { border-color: var(--tw-accent); }
 [aria-checked="true"] .tw-rd-dot::after { transform: scale(1); }
 
-/* Buttons */
+/* @section button */
 .tw-btn-row {
   display: flex;
   flex-wrap: wrap;
@@ -312,7 +315,7 @@ button.tw-item:active { background: var(--tw-sep); }
 .tw-btn-danger { background: var(--tw-danger); color: #ffffff; }
 .tw-btn-saved { background: var(--tw-success); color: #ffffff; }
 
-/* Save bar */
+/* @section save */
 .tw-save-bar {
   display: flex;
   align-items: center;
@@ -326,7 +329,7 @@ button.tw-item:active { background: var(--tw-sep); }
   color: var(--tw-hint);
 }
 
-/* Badge, Progress, Banner, Divider */
+/* @section badge */
 .tw-badge {
   display: inline-flex;
   align-items: center;
@@ -343,6 +346,7 @@ button.tw-item:active { background: var(--tw-sep); }
 .tw-badge-warn { background: rgba(217, 119, 6, 0.16); color: var(--tw-warn); }
 .tw-badge-err { background: rgba(229, 57, 53, 0.16); color: var(--tw-danger); }
 
+/* @section progress */
 .tw-prog {
   width: 100%;
   height: 6px;
@@ -357,6 +361,7 @@ button.tw-item:active { background: var(--tw-sep); }
   background: var(--tw-accent);
 }
 
+/* @section banner */
 .tw-banner {
   padding: 9px 12px;
   border-radius: 10px;
@@ -365,9 +370,35 @@ button.tw-item:active { background: var(--tw-sep); }
   border-left: 3px solid var(--tw-accent);
 }
 
+/* @section divider */
 .tw-divider {
   height: 1px;
   background: var(--tw-sep);
   border: 0;
   margin: 2px 0;
 }
+
+/* @section pager */
+.tw-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tw-pager-info {
+  font-size: 12px;
+  color: var(--tw-hint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* @section empty */
+.tw-empty {
+  padding: 20px 12px;
+  text-align: center;
+  color: var(--tw-hint);
+  font-size: 13px;
+}
+
+/* @section end */
+[hidden] { display: none !important; }

@@ -15,7 +15,10 @@ import {
   twProgress,
   twCard,
   twBanner,
-  twDivider
+  twDivider,
+  twEmpty,
+  twPagination,
+  twPagedList
 } from "../src/index.js";
 
 test("esc escapes HTML special characters", () => {
@@ -107,4 +110,23 @@ test("twButton, twButtonRow, twProgress, twCard, twBanner, twDivider, twHeader",
   assert.match(twCard({ title: "Card", content: "<p>Body</p>" }), /tw-card/);
   assert.match(twBanner({ text: "Notice" }), /role="status"/);
   assert.equal(twDivider(), '<hr class="tw-divider">');
+});
+
+test("twPagedList, twPagination, and twEmpty render pagination controls", () => {
+  const empty = twPagedList({ label: "Results", items: [], emptyText: "No items" });
+  assert.match(empty, /tw-empty/);
+  assert.match(empty, /No items/);
+
+  const items = [1, 2, 3, 4, 5].map((n) => twListItem({ title: `Item ${n}` }));
+  const paged = twPagedList({ label: "Items", items, pageSize: 2, page: 1 });
+  assert.match(paged, /data-tw-paged/);
+  assert.match(paged, /data-tw-size="2"/);
+  assert.match(paged, /1 \/ 3/);
+  assert.match(paged, /data-tw-prev disabled/);
+  assert.match(paged, /data-tw-next/);
+
+  const serverPager = twPagination({ page: 2, totalPages: 4, action: "load_page" });
+  assert.match(serverPager, /2 \/ 4/);
+  assert.match(serverPager, /data-tw-req=/);
+  assert.match(twEmpty({ title: "Empty" }), /tw-empty/);
 });

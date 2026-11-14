@@ -72,6 +72,9 @@ console.log({ rawBytes, compressedBytes, withinLimits });
 | `twHeader` | Widget title and optional subtitle |
 | `twList` | Grouped list container with optional section label |
 | `twListItem` | List row with leading icon, title, subtitle, trailing slot, and optional `request`/`link`/`tgLink` |
+| `twPagedList` | Client-side paginated list (fits 600px height limit without scrolling) |
+| `twPagination` | Bot-driven pagination bar using `TelegramWidget.request()` |
+| `twEmpty` | Empty state placeholder for lists |
 | `twCheckbox` | Custom `role="checkbox"` control (supports `checked`, `indeterminate`, `disabled`) |
 | `twSwitch` | Toggle switch (`role="switch"`) |
 | `twRadioGroup` | Single-select option group (`role="radiogroup"` + `role="radio"`) |

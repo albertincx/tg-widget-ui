@@ -106,10 +106,42 @@
     );
   }
 
+  /* @section paged */function updatePaged(wrap, page) {
+    var size = parseInt(wrap.getAttribute("data-tw-size") || "5", 10);
+    var list = wrap.querySelector(".tw-list");
+    if (!list) return;
+    var items = list.children;
+    var total = Math.max(1, Math.ceil(items.length / size));
+    var p = Math.max(1, Math.min(total, page));
+    wrap.setAttribute("data-tw-page", String(p));
+    var start = (p - 1) * size;
+    var end = start + size;
+    for (var i = 0; i < items.length; i++) {
+      items[i].hidden = i < start || i >= end;
+    }
+    var info = wrap.querySelector(".tw-pager-info");
+    if (info) info.textContent = p + " / " + total;
+    var prev = wrap.querySelector("[data-tw-prev]");
+    var next = wrap.querySelector("[data-tw-next]");
+    if (prev) prev.disabled = p <= 1;
+    if (next) next.disabled = p >= total;
+  }/* @section end */
+
   function onClick(e) {
     var t = e.target;
     while (t && t !== root.document) {
       if (t.getAttribute && t.getAttribute("aria-disabled") === "true") return;
+      /* @section paged */if (t.hasAttribute && (t.hasAttribute("data-tw-prev") || t.hasAttribute("data-tw-next"))) {
+        var wrap = t.parentElement;
+        while (wrap && (!wrap.hasAttribute || !wrap.hasAttribute("data-tw-paged"))) {
+          wrap = wrap.parentElement;
+        }
+        if (wrap) {
+          var cur = parseInt(wrap.getAttribute("data-tw-page") || "1", 10);
+          updatePaged(wrap, cur + (t.hasAttribute("data-tw-next") ? 1 : -1));
+          return;
+        }
+      }/* @section end */
       var role = t.getAttribute ? t.getAttribute("role") : null;
       if (role === "checkbox" || role === "switch") {
         var next = t.getAttribute("aria-checked") !== "true";
@@ -166,6 +198,10 @@
   function init() {
     if (root.document) {
       root.document.addEventListener("click", onClick);
+      /* @section paged */var paged = root.document.querySelectorAll("[data-tw-paged]");
+      for (var i = 0; i < paged.length; i++) {
+        updatePaged(paged[i], parseInt(paged[i].getAttribute("data-tw-page") || "1", 10));
+      }/* @section end */
     }
     if (tg) {
       if (tg.themeParams) applyTheme(tg.themeParams);

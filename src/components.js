@@ -188,3 +188,46 @@ export function twBanner({ text } = {}) {
 export function twDivider() {
   return '<hr class="tw-divider">';
 }
+
+export function twEmpty({ title = "Nothing here", subtitle = "" } = {}) {
+  const sub = subtitle ? `<div class="tw-sub">${esc(subtitle)}</div>` : "";
+  return `<div class="tw-empty"><div class="tw-item-title">${esc(title)}</div>${sub}</div>`;
+}
+
+export function twPagination({
+  page = 1,
+  totalPages = 1,
+  prevLabel = "Prev",
+  nextLabel = "Next",
+  action = "page"
+} = {}) {
+  const p = Math.max(1, Number(page));
+  const total = Math.max(1, Number(totalPages));
+  const prevReq = JSON.stringify({ action, page: p - 1 });
+  const nextReq = JSON.stringify({ action, page: p + 1 });
+  const prevBtn = `<button type="button" class="tw-btn tw-btn-sm tw-btn-sec"${p <= 1 ? " disabled" : ` data-tw-req="${esc(prevReq)}"`}>${esc(prevLabel)}</button>`;
+  const nextBtn = `<button type="button" class="tw-btn tw-btn-sm tw-btn-sec"${p >= total ? " disabled" : ` data-tw-req="${esc(nextReq)}"`}>${esc(nextLabel)}</button>`;
+  return `<div class="tw-pager">${prevBtn}<span class="tw-pager-info">${p} / ${total}</span>${nextBtn}</div>`;
+}
+
+export function twPagedList({
+  label = "",
+  items = [],
+  pageSize = 5,
+  page = 1,
+  prevLabel = "Prev",
+  nextLabel = "Next",
+  emptyText = "Empty"
+} = {}) {
+  if (!items.length) {
+    return twList({ label, items: [twEmpty({ title: emptyText })] });
+  }
+  const size = Math.max(1, Number(pageSize));
+  const total = Math.max(1, Math.ceil(items.length / size));
+  const cur = Math.max(1, Math.min(total, Number(page)));
+  const pager =
+    total > 1
+      ? `<div class="tw-pager"><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-prev${cur <= 1 ? " disabled" : ""}>${esc(prevLabel)}</button><span class="tw-pager-info">${cur} / ${total}</span><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-next${cur >= total ? " disabled" : ""}>${esc(nextLabel)}</button></div>`
+      : "";
+  return `<div class="tw-root" data-tw-paged data-tw-size="${size}" data-tw-page="${cur}">${twList({ label, items })}${pager}</div>`;
+}
