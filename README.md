@@ -72,8 +72,10 @@ console.log({ rawBytes, compressedBytes, withinLimits });
 | `twHeader` | Widget title and optional subtitle |
 | `twList` | Grouped list container with optional section label |
 | `twListItem` | List row with leading icon, title, subtitle, trailing slot, and optional `request`/`link`/`tgLink` |
-| `twPagedList` | Client-side paginated list (fits 600px height limit without scrolling) |
-| `twPagination` | Bot-driven pagination bar using `TelegramWidget.request()` |
+| `twPagedList` | Client-side paginated list with numbered pages (`1 2 ... 10`) |
+| `twPagination` | Bot-driven numbered pagination bar using `TelegramWidget.request()` |
+| `twMasterDetail` | Master-detail container for viewing list item details with a Back button |
+| `twDetailView` | Detail screen with `← Back` button (`data-tw-back`) |
 | `twEmpty` | Empty state placeholder for lists |
 | `twCheckbox` | Custom `role="checkbox"` control (supports `checked`, `indeterminate`, `disabled`) |
 | `twSwitch` | Toggle switch (`role="switch"`) |

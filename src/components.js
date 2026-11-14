@@ -36,15 +36,17 @@ export function twListItem({
   request = "",
   link = "",
   tgLink = "",
+  openDetail = "",
   disabled = false
 } = {}) {
-  const interactive = Boolean(request || link || tgLink);
+  const interactive = Boolean(request || link || tgLink || openDetail);
   const tag = interactive ? "button" : "div";
   const attrs = [
     interactive ? 'type="button"' : "",
     request ? `data-tw-req="${esc(request)}"` : "",
     link ? `data-tw-link="${esc(link)}"` : "",
     tgLink ? `data-tw-tg-link="${esc(tgLink)}"` : "",
+    openDetail ? `data-tw-open="${esc(openDetail)}"` : "",
     disabled ? (interactive ? "disabled" : 'aria-disabled="true"') : ""
   ]
     .filter(Boolean)
@@ -194,11 +196,25 @@ export function twEmpty({ title = "Nothing here", subtitle = "" } = {}) {
   return `<div class="tw-empty"><div class="tw-item-title">${esc(title)}</div>${sub}</div>`;
 }
 
+export function pageRange(cur, total) {
+  if (total <= 6) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const pages = [1];
+  const left = Math.max(2, cur - 1);
+  const right = Math.min(total - 1, cur + 1);
+  if (left > 2) pages.push("...");
+  for (let i = left; i <= right; i++) pages.push(i);
+  if (right < total - 1) pages.push("...");
+  pages.push(total);
+  return pages;
+}
+
 export function twPagination({
   page = 1,
   totalPages = 1,
-  prevLabel = "Prev",
-  nextLabel = "Next",
+  prevLabel = "‹",
+  nextLabel = "›",
   action = "page"
 } = {}) {
   const p = Math.max(1, Number(page));
@@ -207,7 +223,14 @@ export function twPagination({
   const nextReq = JSON.stringify({ action, page: p + 1 });
   const prevBtn = `<button type="button" class="tw-btn tw-btn-sm tw-btn-sec"${p <= 1 ? " disabled" : ` data-tw-req="${esc(prevReq)}"`}>${esc(prevLabel)}</button>`;
   const nextBtn = `<button type="button" class="tw-btn tw-btn-sm tw-btn-sec"${p >= total ? " disabled" : ` data-tw-req="${esc(nextReq)}"`}>${esc(nextLabel)}</button>`;
-  return `<div class="tw-pager">${prevBtn}<span class="tw-pager-info">${p} / ${total}</span>${nextBtn}</div>`;
+  const nums = pageRange(p, total)
+    .map((n) =>
+      n === "..."
+        ? '<span class="tw-pg-dots">...</span>'
+        : `<button type="button" class="tw-pg-num${n === p ? " tw-pg-act" : ""}"${n === p ? ' aria-current="page"' : ` data-tw-req="${esc(JSON.stringify({ action, page: n }))}"`}>${n}</button>`
+    )
+    .join("");
+  return `<div class="tw-pager">${prevBtn}<div class="tw-pager-nums">${nums}</div>${nextBtn}</div>`;
 }
 
 export function twPagedList({
@@ -215,8 +238,8 @@ export function twPagedList({
   items = [],
   pageSize = 5,
   page = 1,
-  prevLabel = "Prev",
-  nextLabel = "Next",
+  prevLabel = "‹",
+  nextLabel = "›",
   emptyText = "Empty"
 } = {}) {
   if (!items.length) {
@@ -225,9 +248,25 @@ export function twPagedList({
   const size = Math.max(1, Number(pageSize));
   const total = Math.max(1, Math.ceil(items.length / size));
   const cur = Math.max(1, Math.min(total, Number(page)));
+  const nums = pageRange(cur, total)
+    .map((n) =>
+      n === "..."
+        ? '<span class="tw-pg-dots">...</span>'
+        : `<button type="button" class="tw-pg-num${n === cur ? " tw-pg-act" : ""}" data-tw-page-btn="${n}"${n === cur ? ' aria-current="page"' : ""}>${n}</button>`
+    )
+    .join("");
   const pager =
     total > 1
-      ? `<div class="tw-pager"><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-prev${cur <= 1 ? " disabled" : ""}>${esc(prevLabel)}</button><span class="tw-pager-info">${cur} / ${total}</span><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-next${cur >= total ? " disabled" : ""}>${esc(nextLabel)}</button></div>`
+      ? `<div class="tw-pager"><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-prev${cur <= 1 ? " disabled" : ""}>${esc(prevLabel)}</button><div class="tw-pager-nums">${nums}</div><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-next${cur >= total ? " disabled" : ""}>${esc(nextLabel)}</button></div>`
       : "";
   return `<div class="tw-root" data-tw-paged data-tw-size="${size}" data-tw-page="${cur}">${twList({ label, items })}${pager}</div>`;
+}
+
+export function twDetailView({ id, title = "", backLabel = "Back", content = "" } = {}) {
+  const head = `<div class="tw-detail-head"><button type="button" class="tw-btn tw-btn-sm tw-btn-sec" data-tw-back>&larr; ${esc(backLabel)}</button>${title ? `<h3 class="tw-title">${esc(title)}</h3>` : ""}</div>`;
+  return `<div class="tw-root" data-tw-view="${esc(id)}" hidden>${head}${content}</div>`;
+}
+
+export function twMasterDetail({ master = "", details = [] } = {}) {
+  return `<div class="tw-root" data-tw-md><div class="tw-root" data-tw-master>${master}</div>${details.join("")}</div>`;
 }

@@ -81,6 +81,7 @@ const SECTION_MATCHERS = {
   banner: /tw-banner/,
   divider: /tw-divider/,
   pager: /tw-pager/,
+  detail: /tw-detail-head/,
   empty: /tw-empty/
 };
 
@@ -92,8 +93,14 @@ export function pruneCss(css, html) {
 }
 
 export function pruneJs(js, html) {
-  if (/data-tw-paged/.test(html)) return js;
-  return js.replace(/\/\*\s*@section\s+paged\s*\*\/[\s\S]*?\/\*\s*@section\s+end\s*\*\//g, "");
+  let out = js;
+  if (!/data-tw-paged/.test(html)) {
+    out = out.replace(/\/\*\s*@section\s+paged\s*\*\/[\s\S]*?\/\*\s*@section\s+end\s*\*\//g, "");
+  }
+  if (!/data-tw-open/.test(html)) {
+    out = out.replace(/\/\*\s*@section\s+detail\s*\*\/[\s\S]*?\/\*\s*@section\s+end\s*\*\//g, "");
+  }
+  return out;
 }
 
 export function buildWidget({

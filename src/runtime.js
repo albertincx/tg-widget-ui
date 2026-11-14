@@ -106,7 +106,29 @@
     );
   }
 
-  /* @section paged */function updatePaged(wrap, page) {
+  /* @section paged */function buildNums(p, total) {
+    var arr = [];
+    if (total <= 6) {
+      for (var i = 1; i <= total; i++) arr.push(i);
+    } else {
+      arr.push(1);
+      var l = Math.max(2, p - 1), r = Math.min(total - 1, p + 1);
+      if (l > 2) arr.push("...");
+      for (var j = l; j <= r; j++) arr.push(j);
+      if (r < total - 1) arr.push("...");
+      arr.push(total);
+    }
+    var out = "";
+    for (var k = 0; k < arr.length; k++) {
+      var n = arr[k];
+      out += n === "..."
+        ? '<span class="tw-pg-dots">...</span>'
+        : '<button type="button" class="tw-pg-num' + (n === p ? " tw-pg-act" : "") + '" data-tw-page-btn="' + n + '"' + (n === p ? ' aria-current="page"' : "") + ">" + n + "</button>";
+    }
+    return out;
+  }
+
+  function updatePaged(wrap, page) {
     var size = parseInt(wrap.getAttribute("data-tw-size") || "5", 10);
     var list = wrap.querySelector(".tw-list");
     if (!list) return;
@@ -119,8 +141,8 @@
     for (var i = 0; i < items.length; i++) {
       items[i].hidden = i < start || i >= end;
     }
-    var info = wrap.querySelector(".tw-pager-info");
-    if (info) info.textContent = p + " / " + total;
+    var nums = wrap.querySelector(".tw-pager-nums");
+    if (nums) nums.innerHTML = buildNums(p, total);
     var prev = wrap.querySelector("[data-tw-prev]");
     var next = wrap.querySelector("[data-tw-next]");
     if (prev) prev.disabled = p <= 1;
@@ -131,16 +153,40 @@
     var t = e.target;
     while (t && t !== root.document) {
       if (t.getAttribute && t.getAttribute("aria-disabled") === "true") return;
-      /* @section paged */if (t.hasAttribute && (t.hasAttribute("data-tw-prev") || t.hasAttribute("data-tw-next"))) {
+      /* @section paged */if (t.hasAttribute && (t.hasAttribute("data-tw-prev") || t.hasAttribute("data-tw-next") || t.hasAttribute("data-tw-page-btn"))) {
         var wrap = t.parentElement;
         while (wrap && (!wrap.hasAttribute || !wrap.hasAttribute("data-tw-paged"))) {
           wrap = wrap.parentElement;
         }
         if (wrap) {
-          var cur = parseInt(wrap.getAttribute("data-tw-page") || "1", 10);
-          updatePaged(wrap, cur + (t.hasAttribute("data-tw-next") ? 1 : -1));
+          var targetPage = t.hasAttribute("data-tw-page-btn")
+            ? parseInt(t.getAttribute("data-tw-page-btn"), 10)
+            : parseInt(wrap.getAttribute("data-tw-page") || "1", 10) + (t.hasAttribute("data-tw-next") ? 1 : -1);
+          updatePaged(wrap, targetPage);
           return;
         }
+      }/* @section end */
+      /* @section detail */if (t.hasAttribute && t.hasAttribute("data-tw-open")) {
+        var id = t.getAttribute("data-tw-open");
+        var md = t.parentElement;
+        while (md && (!md.hasAttribute || !md.hasAttribute("data-tw-md"))) md = md.parentElement;
+        if (md) {
+          var m = md.querySelector("[data-tw-master]");
+          var v = md.querySelector('[data-tw-view="' + id + '"]');
+          if (m && v) { m.hidden = true; v.hidden = false; }
+        }
+        return;
+      }
+      if (t.hasAttribute && t.hasAttribute("data-tw-back")) {
+        var md2 = t.parentElement;
+        while (md2 && (!md2.hasAttribute || !md2.hasAttribute("data-tw-md"))) md2 = md2.parentElement;
+        if (md2) {
+          var views = md2.querySelectorAll("[data-tw-view]");
+          for (var vi = 0; vi < views.length; vi++) views[vi].hidden = true;
+          var m2 = md2.querySelector("[data-tw-master]");
+          if (m2) m2.hidden = false;
+        }
+        return;
       }/* @section end */
       var role = t.getAttribute ? t.getAttribute("role") : null;
       if (role === "checkbox" || role === "switch") {

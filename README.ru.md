@@ -72,8 +72,10 @@ console.log({ rawBytes, compressedBytes, withinLimits });
 | `twHeader` | Заголовок и подзаголовок виджета |
 | `twList` | Контейнер списка с опциональным заголовком секции |
 | `twListItem` | Элемент списка (иконка, заголовок, подзаголовок, правый слот, `request`/`link`/`tgLink`) |
-| `twPagedList` | Список с клиентской пагинацией (укладывается в лимит высоты 600px без скролла) |
-| `twPagination` | Серверная пагинация через `TelegramWidget.request()` |
+| `twPagedList` | Список с клиентской пагинацией и цифрами страниц (`1 2 ... 10`) |
+| `twPagination` | Серверная пагинация с цифрами через `TelegramWidget.request()` |
+| `twMasterDetail` | Контейнер master-detail для просмотра элемента списка с кнопкой «Назад» |
+| `twDetailView` | Экран деталей элемента с кнопкой `← Back` (`data-tw-back`) |
 | `twEmpty` | Заглушка для пустого списка |
 | `twCheckbox` | Кастомный чекбокс (`role="checkbox"`, `checked`, `indeterminate`, `disabled`) |
 | `twSwitch` | Переключатель (`role="switch"`) |

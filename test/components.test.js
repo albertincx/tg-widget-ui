@@ -18,7 +18,10 @@ import {
   twDivider,
   twEmpty,
   twPagination,
-  twPagedList
+  twPagedList,
+  twDetailView,
+  twMasterDetail,
+  pageRange
 } from "../src/index.js";
 
 test("esc escapes HTML special characters", () => {
@@ -112,21 +115,40 @@ test("twButton, twButtonRow, twProgress, twCard, twBanner, twDivider, twHeader",
   assert.equal(twDivider(), '<hr class="tw-divider">');
 });
 
-test("twPagedList, twPagination, and twEmpty render pagination controls", () => {
+test("twPagedList, twPagination, and twEmpty render numbered pagination 1..10", () => {
   const empty = twPagedList({ label: "Results", items: [], emptyText: "No items" });
   assert.match(empty, /tw-empty/);
   assert.match(empty, /No items/);
 
-  const items = [1, 2, 3, 4, 5].map((n) => twListItem({ title: `Item ${n}` }));
+  assert.deepEqual(pageRange(1, 10), [1, 2, "...", 10]);
+  assert.deepEqual(pageRange(5, 10), [1, "...", 4, 5, 6, "...", 10]);
+
+  const items = Array.from({ length: 20 }, (_, i) => twListItem({ title: `Item ${i + 1}` }));
   const paged = twPagedList({ label: "Items", items, pageSize: 2, page: 1 });
   assert.match(paged, /data-tw-paged/);
-  assert.match(paged, /data-tw-size="2"/);
-  assert.match(paged, /1 \/ 3/);
+  assert.match(paged, /data-tw-page-btn="1"/);
+  assert.match(paged, /data-tw-page-btn="10"/);
+  assert.match(paged, /tw-pg-dots/);
   assert.match(paged, /data-tw-prev disabled/);
-  assert.match(paged, /data-tw-next/);
 
-  const serverPager = twPagination({ page: 2, totalPages: 4, action: "load_page" });
-  assert.match(serverPager, /2 \/ 4/);
+  const serverPager = twPagination({ page: 2, totalPages: 10, action: "load_page" });
+  assert.match(serverPager, /aria-current="page"/);
   assert.match(serverPager, /data-tw-req=/);
   assert.match(twEmpty({ title: "Empty" }), /tw-empty/);
+});
+
+test("twMasterDetail and twDetailView render item detail screen with Back button", () => {
+  const html = twMasterDetail({
+    master: twList({
+      items: [twListItem({ title: "Order #1", openDetail: "order-1" })]
+    }),
+    details: [
+      twDetailView({ id: "order-1", title: "Order #1", backLabel: "Back", content: "<p>Paid</p>" })
+    ]
+  });
+  assert.match(html, /data-tw-md/);
+  assert.match(html, /data-tw-master/);
+  assert.match(html, /data-tw-open="order-1"/);
+  assert.match(html, /data-tw-view="order-1" hidden/);
+  assert.match(html, /data-tw-back/);
 });

@@ -23,7 +23,7 @@ Official spec: https://core.telegram.org/bots/api-changelog#november-9-2026
 ## Workflow
 
 1. **Compose UI** using `tg-widget-ui` components:
-   - Layout & Lists: `twHeader`, `twList`, `twListItem`, `twPagedList`, `twPagination`, `twEmpty`, `twCard`, `twDivider`, `twBanner`
+   - Layout & Lists: `twHeader`, `twList`, `twListItem`, `twPagedList`, `twPagination`, `twMasterDetail`, `twDetailView`, `twEmpty`, `twCard`, `twDivider`, `twBanner`
    - Controls: `twCheckbox` (`checked`, `indeterminate`), `twSwitch`, `twRadioGroup`, `twButton`, `twButtonRow`, `twSaveButton`
    - Indicators: `twBadge`, `twProgress`
 2. **Compile & Validate** with `buildWidget({ title, lang, body, customCss, customJs })`:
